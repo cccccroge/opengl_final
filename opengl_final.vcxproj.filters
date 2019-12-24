@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{59382c6f-5378-4047-8ea6-0a6a076398b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scene">
+      <UniqueIdentifier>{40e602f7-4710-4f1c-b4f8-49350c3b2853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render">
+      <UniqueIdentifier>{1c740402-181a-4df5-aafd-8af010a1ed40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\mesh_data">
+      <UniqueIdentifier>{65aafed4-403d-44ed-958d-0bf43ab0bc0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\event">
+      <UniqueIdentifier>{47deb2a3-eb5e-4818-a159-75995767cc9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{69042039-ce5b-484c-8496-e87594b62356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{4c142aed-0f77-4ec2-b0af-7f49d0ecd911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\shader">
+      <UniqueIdentifier>{6f3fa2a0-8be2-4c2a-9cb0-7822b25472f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\global.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\init.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\CubemapTexture.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\Mesh.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\Texture.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\Vertex.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\VertexArray.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh_data\VertexLayout.h">
+      <Filter>src\mesh_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\callback.h">
+      <Filter>src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\keymap.h">
+      <Filter>src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\FrameBuffer.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\PostEffectBuffer.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\RenderBuffer.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\Renderer.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\Shader.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\ShaderProgram.h">
+      <Filter>src\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Camera.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Model.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\SceneObject.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Skybox.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\STB\stb_image.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\TinyOBJ\tiny_obj_loader.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\global.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\init.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\CubemapTexture.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\Mesh.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\Texture.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\Vertex.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\VertexArray.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh_data\VertexLayout.cpp">
+      <Filter>src\mesh_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\event\callback.cpp">
+      <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\event\keymap.cpp">
+      <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\FrameBuffer.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\PostEffectBuffer.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\RenderBuffer.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\Renderer.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\Shader.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\ShaderProgram.cpp">
+      <Filter>src\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Camera.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Model.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\SceneObject.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Skybox.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\STB\stb_image.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\model.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\model.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\posteffect.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\posteffect.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shadow.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shadow.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\skybox.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\skybox.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
