@@ -1,4 +1,7 @@
 #include "Renderer.h"
+#include "imGui/imgui.h"
+#include "imGui/imgui_impl_glut.h"
+#include "imGui/imgui_impl_opengl3.h"
 #include "freeGLUT/freeglut.h"
 #include "../utils.h"
 #include "../global.h"
@@ -79,7 +82,21 @@ void Renderer::RenderAll()
 
 		DrawScreen();
 
-    // 4.Finish all draw calls, now flip swap buffer
+	// 4.render imGui stuff
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGLUT_NewFrame();
+
+	ImGui::ShowDemoWindow();
+	/*ImGui::Begin("Hello, world!");
+	ImGui::Text("This is some useful text.");
+	ImGui::End();*/
+
+	ImGui::Render();
+	ImGuiIO& io = ImGui::GetIO();
+	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    // 5.Finish all draw calls, now flip swap buffer
     glutSwapBuffers();
 }
 

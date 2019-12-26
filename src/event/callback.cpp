@@ -1,6 +1,9 @@
 #include "callback.h"
 #include "../utils.h"
 #include "../init.h"
+#include "imGui/imgui.h"
+#include "imGui/imgui_impl_glut.h"
+#include "imGui/imgui_impl_opengl3.h"
 #include "freeGLUT/freeglut.h"
 
 #include "GLM/vec3.hpp"

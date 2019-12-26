@@ -1,7 +1,7 @@
 #include "GLEW/glew.h"
 #include "imGui/imgui.h"
 #include "imGui/imgui_impl_glut.h"
-#include "imGui/imgui_impl_opengl2.h"
+#include "imGui/imgui_impl_opengl3.h"
 #include "freeGLUT/freeglut.h"
 
 #include "GLM/vec3.hpp"
@@ -127,6 +127,15 @@ int main(int argc, char *argv[])
 	registerCallbacks();
 	global::timer.Start();
 	
+	/* ImGui initialization */
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGLUT_Init();
+	ImGui_ImplGLUT_InstallFuncs();
+	ImGui_ImplOpenGL3_Init();
+
 	/* GLEW initialization */
 	initGlew();
 	dumpInfo();
@@ -140,6 +149,10 @@ int main(int argc, char *argv[])
 	// MainLoop ends here, free mem.
 	std::cout << "Return control from main loop." << std::endl;
 	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGLUT_Shutdown();
+	ImGui::DestroyContext();
+
 	delete global::postEffectBuffer;
 	delete global::renderer;
 	delete global::Man;

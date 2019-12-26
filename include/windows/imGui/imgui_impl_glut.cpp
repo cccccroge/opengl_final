@@ -34,6 +34,8 @@
 #pragma warning (disable: 4505) // unreferenced local function has been removed (stb stuff)
 #endif
 
+#include "../../../src/event/callback.h"
+
 static int g_Time = 0;          // Current time, in milliseconds
 
 bool ImGui_ImplGLUT_Init()
@@ -133,6 +135,8 @@ void ImGui_ImplGLUT_KeyboardFunc(unsigned char c, int x, int y)
         io.KeysDown[c] = true;
     ImGui_ImplGLUT_UpdateKeyboardMods();
     (void)x; (void)y; // Unused
+
+	onKeyboardPressed(c, x, y);
 }
 
 void ImGui_ImplGLUT_KeyboardUpFunc(unsigned char c, int x, int y)
@@ -149,6 +153,8 @@ void ImGui_ImplGLUT_KeyboardUpFunc(unsigned char c, int x, int y)
         io.KeysDown[c] = false;
     ImGui_ImplGLUT_UpdateKeyboardMods();
     (void)x; (void)y; // Unused
+
+	onKeyboardReleased(c, x, y);
 }
 
 void ImGui_ImplGLUT_SpecialFunc(int key, int x, int y)
@@ -159,6 +165,8 @@ void ImGui_ImplGLUT_SpecialFunc(int key, int x, int y)
         io.KeysDown[key + 256] = true;
     ImGui_ImplGLUT_UpdateKeyboardMods();
     (void)x; (void)y; // Unused
+
+	onSpecialkeysPressed(key, x, y);
 }
 
 void ImGui_ImplGLUT_SpecialUpFunc(int key, int x, int y)
@@ -169,6 +177,8 @@ void ImGui_ImplGLUT_SpecialUpFunc(int key, int x, int y)
         io.KeysDown[key + 256] = false;
     ImGui_ImplGLUT_UpdateKeyboardMods();
     (void)x; (void)y; // Unused
+
+	onSpecialkeysReleased(key, x, y);
 }
 
 void ImGui_ImplGLUT_MouseFunc(int glut_button, int state, int x, int y)
@@ -183,6 +193,8 @@ void ImGui_ImplGLUT_MouseFunc(int glut_button, int state, int x, int y)
         io.MouseDown[button] = true;
     if (button != -1 && state == GLUT_UP)
         io.MouseDown[button] = false;
+
+	onMousePressed(glut_button, state, x, y);
 }
 
 #ifdef __FREEGLUT_EXT_H__
@@ -195,6 +207,8 @@ void ImGui_ImplGLUT_MouseWheelFunc(int button, int dir, int x, int y)
     else if (dir < 0)
         io.MouseWheel -= 1.0;
     (void)button; // Unused
+
+	onMouseWheelSpinned(button, dir, x, y);
 }
 #endif
 
@@ -202,10 +216,14 @@ void ImGui_ImplGLUT_ReshapeFunc(int w, int h)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2((float)w, (float)h);
+
+	onWindowReshaped(w, h);
 }
 
 void ImGui_ImplGLUT_MotionFunc(int x, int y)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.MousePos = ImVec2((float)x, (float)y);
+
+	onMouseMoved(x, y);
 }
