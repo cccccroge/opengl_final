@@ -27,7 +27,7 @@
 #ifdef __APPLE__
     #include <GLUT/glut.h>
 #else
-    #include <GL/freeglut.h>
+    #include <freeGLUT/freeglut.h>
 #endif
 
 #ifdef _MSC_VER

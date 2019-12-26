@@ -16,7 +16,12 @@ public:
     void setLightCamera(Camera &cam);
     void addModel(Model &model);
     void addSkybox(Skybox &skybox);
+
     void RenderAll();
+	void DrawDepthMap();
+	void DrawModels();
+	void DrawSkybox();
+	void DrawScreen();
 
     inline Camera* getMainCamera() { return main_camera; }
 
