@@ -80,7 +80,8 @@ void Texture::bind(ShaderProgram &program, const std::string sampler_name,
     glActiveTexture(GL_TEXTURE0 + index);
 	glBindTexture(GL_TEXTURE_2D, tbo);
 	program.bind();
-	program.setUniform1i(sampler_name.c_str(), (GLint)index);
+	program.setUniform1i((sampler_name /*+ std::to_string(index)*/).c_str(), 
+		(GLint)index);
 }
 
 

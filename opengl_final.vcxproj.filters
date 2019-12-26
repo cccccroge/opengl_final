@@ -99,6 +99,33 @@
     <ClInclude Include="include\windows\TinyOBJ\tiny_obj_loader.h">
       <Filter>third_party</Filter>
     </ClInclude>
+    <ClInclude Include="include\windows\imGui\imconfig.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imgui.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imgui_internal.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imstb_rectpack.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imstb_textedit.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imstb_truetype.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imgui_impl_glut.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imgui_impl_opengl2.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\imGui\imgui_impl_opengl3.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -173,30 +200,51 @@
     <ClCompile Include="include\windows\STB\stb_image.cpp">
       <Filter>third_party</Filter>
     </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_demo.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_draw.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_widgets.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_impl_glut.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_impl_opengl2.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="include\windows\imGui\imgui_impl_opengl3.cpp">
+      <Filter>third_party</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\model.fs.glsl">
+    <None Include="assets\shader\model.fs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\model.vs.glsl">
+    <None Include="assets\shader\model.vs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\posteffect.fs.glsl">
+    <None Include="assets\shader\posteffect.fs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\posteffect.vs.glsl">
+    <None Include="assets\shader\posteffect.vs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\shadow.fs.glsl">
+    <None Include="assets\shader\shadow.fs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\shadow.vs.glsl">
+    <None Include="assets\shader\shadow.vs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\skybox.fs.glsl">
+    <None Include="assets\shader\skybox.fs.glsl">
       <Filter>assets\shader</Filter>
     </None>
-    <None Include="assets\skybox.vs.glsl">
+    <None Include="assets\shader\skybox.vs.glsl">
       <Filter>assets\shader</Filter>
     </None>
   </ItemGroup>

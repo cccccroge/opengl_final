@@ -19,6 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\windows\imGui\imconfig.h" />
+    <ClInclude Include="include\windows\imGui\imgui.h" />
+    <ClInclude Include="include\windows\imGui\imgui_impl_glut.h" />
+    <ClInclude Include="include\windows\imGui\imgui_impl_opengl2.h" />
+    <ClInclude Include="include\windows\imGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\windows\imGui\imgui_internal.h" />
+    <ClInclude Include="include\windows\imGui\imstb_rectpack.h" />
+    <ClInclude Include="include\windows\imGui\imstb_textedit.h" />
+    <ClInclude Include="include\windows\imGui\imstb_truetype.h" />
     <ClInclude Include="include\windows\STB\stb_image.h" />
     <ClInclude Include="include\windows\TinyOBJ\tiny_obj_loader.h" />
     <ClInclude Include="src\event\callback.h" />
@@ -45,6 +54,13 @@
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\windows\imGui\imgui.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_demo.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_draw.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_impl_glut.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="include\windows\imGui\imgui_widgets.cpp" />
     <ClCompile Include="include\windows\STB\stb_image.cpp" />
     <ClCompile Include="src\event\callback.cpp" />
     <ClCompile Include="src\event\keymap.cpp" />
@@ -71,14 +87,14 @@
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\model.fs.glsl" />
-    <None Include="assets\model.vs.glsl" />
-    <None Include="assets\posteffect.fs.glsl" />
-    <None Include="assets\posteffect.vs.glsl" />
-    <None Include="assets\shadow.fs.glsl" />
-    <None Include="assets\shadow.vs.glsl" />
-    <None Include="assets\skybox.fs.glsl" />
-    <None Include="assets\skybox.vs.glsl" />
+    <None Include="assets\shader\model.fs.glsl" />
+    <None Include="assets\shader\model.vs.glsl" />
+    <None Include="assets\shader\posteffect.fs.glsl" />
+    <None Include="assets\shader\posteffect.vs.glsl" />
+    <None Include="assets\shader\shadow.fs.glsl" />
+    <None Include="assets\shader\shadow.vs.glsl" />
+    <None Include="assets\shader\skybox.fs.glsl" />
+    <None Include="assets\shader\skybox.vs.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

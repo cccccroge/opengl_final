@@ -25,12 +25,13 @@ uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform float ambientStrength;
 uniform vec3 ambientAlbedo;
-uniform vec3 diffuseAlbedo;
+//uniform vec3 diffuseAlbedo;
 uniform vec3 specularAlbedo;
 uniform int specularPower;
 
 uniform samplerCube skybox;
 uniform sampler2D shadowMap;
+uniform sampler2D tex;
 
 layout(location = 0) out vec4 fragColor;
 
@@ -83,7 +84,7 @@ float shadow_factor(vec4 fragPos)   // light space
     return shadow_factor;
 }
 
-vec4 blinn_phong()
+vec3 blinn_phong()
 {
     // Ambient
     vec3 ambient = ambientStrength * ambientAlbedo;
@@ -92,6 +93,7 @@ vec4 blinn_phong()
     vec3 normal_unit = normalize(blinnPhongData.normal);
     vec3 light_dir_unit = normalize(lightPos - blinnPhongData.fragPos);
     float diffuse_value = max(dot(normal_unit, light_dir_unit), 0.0);
+    vec3 diffuseAlbedo = vec3(texture(tex, vertexData.texCoord));
     vec3 diffuse = diffuse_value * diffuseAlbedo;
 
     // Specular
@@ -102,19 +104,14 @@ vec4 blinn_phong()
         max(dot(normal_unit, halfway_unit), 0.0), specularPower);
     vec3 specular = specular_value * specularAlbedo;
 
-    // Ambient + Diffuse + (Specular blended with env. map)
-    float model_color = 1.0;
-    vec3 mix = (ambient + diffuse + 
-        specular * 0.65 + environment_map().xyz * 0.35) * model_color;
 
-    // Add shadow
-    vec3 result = mix * (1 - shadow_factor(shadowData.fragPos));
-
-    return vec4(result, 1.0);
+    return ambient + diffuse + specular;
 }
 
 
 void main()
 {
-    fragColor = blinn_phong();
+    vec3 blinn_phong_col = blinn_phong();
+    vec3 add_shadow = blinn_phong_col * (1 - shadow_factor(shadowData.fragPos));
+    fragColor = vec4(add_shadow, 1.0);
 }

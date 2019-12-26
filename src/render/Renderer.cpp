@@ -97,8 +97,6 @@ void Renderer::RenderAll()
 
         // bind mesh and draw
         for (auto meshPtr : modelPtr->getMeshes()) {
-            skybox->getTexture().bind(*global::program_model,   // use in enviroment mapping
-                "skybox", 0);
             global::depthTex->bind(*global::program_model,    // use in shadow mapping
                 "shadowMap", 1);
             meshPtr->bind(*global::program_model, "tex");

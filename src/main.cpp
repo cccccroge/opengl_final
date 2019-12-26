@@ -1,4 +1,7 @@
 #include "GLEW/glew.h"
+#include "imGui/imgui.h"
+#include "imGui/imgui_impl_glut.h"
+#include "imGui/imgui_impl_opengl2.h"
 #include "freeGLUT/freeglut.h"
 
 #include "GLM/vec3.hpp"
@@ -59,7 +62,7 @@ void setupRendering()
 	global::program_shadow->compile();
    
 	// setup models
-	global::Man = new Model("assets/model/hisman/nanosuit.obj");
+	global::Man = new Model("assets/model/lost_empire/lost_empire.obj");
 	global::Man->translate(-10.0f, -13.0f, -8.0f);
 	global::Man->scale(0.5f, 0.35f, 0.5f);
 
@@ -110,8 +113,6 @@ void setupRendering()
 	global::program_model->setUniform1f("ambientStrength", 0.0f);
 	global::program_model->setUniformVec3("ambientAlbedo",
 		glm::vec3(1.0f, 1.0f, 1.0f));
-	global::program_model->setUniformVec3("diffuseAlbedo",
-		glm::vec3(0.35f, 0.35f, 0.35f));
 	global::program_model->setUniformVec3("specularAlbedo",
 		glm::vec3(0.7f, 0.7f, 0.7f));
 	global::program_model->setUniform1i("specularPower", 200);
