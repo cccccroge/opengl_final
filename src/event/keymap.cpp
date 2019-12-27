@@ -7,16 +7,16 @@ std::map< std::pair<std::set<std::string>, std::string>, TOOL_MODE > keyMap = {
             { { "shift_L" }, "mouse_M" }, TOOL_MODE::PAN
         },
         { 
-            { std::set<std::string>(), "mouse_M" }, TOOL_MODE::ORBIT
+            { std::set<std::string>(), "mouse_M" }, TOOL_MODE::LOOK
         },
         /*{
             { {?} }, TOOL_MODE::ZOOM  // ignore, GLUT treat mouse wheel as seperated callback
         },*/
         {
-            { { "shift_L" }, "F" }, TOOL_MODE::FIRST_PERSON
+            { std::set<std::string>(), "f" }, TOOL_MODE::FIRST_PERSON
         },
         {
-            { std::set<std::string>(), "f" }, TOOL_MODE::TOGGLE_FULLSCREEN
+            { std::set<std::string>(), "m" }, TOOL_MODE::TOGGLE_FULLSCREEN
         },
     };
 

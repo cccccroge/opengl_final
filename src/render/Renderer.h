@@ -22,6 +22,7 @@ public:
 	void DrawModels();
 	void DrawSkybox();
 	void DrawScreen();
+	void DrawImGui();
 
     inline Camera* getMainCamera() { return main_camera; }
 

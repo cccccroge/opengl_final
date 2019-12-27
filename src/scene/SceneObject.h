@@ -13,6 +13,8 @@ public:
 
 	void translate(float x, float y, float z);
     void translate(glm::vec3 vec);
+	void setTranslation(glm::vec3 translation);
+
 	void rotate(float deg, std::vector<float> axis);
     void rotate(float deg, glm::vec3 axis);
     void rotate(glm::mat4 rot);

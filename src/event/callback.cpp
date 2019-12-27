@@ -91,13 +91,13 @@ void onKeyboardPressed(unsigned char key, int x, int y)
 			}
 		}
 
-		// model rotation
 		switch(key) {
-			case 'q':
-				global::Man->rotate(3.0f, UP_VECTOR);
-				break;
-			case 'e':
-				global::Man->rotate(-3.0f, UP_VECTOR);
+			case 'p':
+				glm::vec3 pos = global::camViewport.getPos();
+				std::cout << "camera pos: (" 
+					<< pos.x << ", "
+					<< pos.y << ", "
+					<< pos.z << ")\t" << std::endl;
 				break;
 		}
 	}
@@ -197,7 +197,7 @@ void onMousePressed(int button, int state, int x, int y)
 				std::cout << std::endl;
 
 				checkTool(keyStr);
-				if (toolMode == TOOL_MODE::ORBIT || 	
+				if (toolMode == TOOL_MODE::LOOK ||
 					toolMode == TOOL_MODE::PAN) {
 					// update mouse pos immediately, or it will be uninitialized
 					MOUSE_POS.x = x;
@@ -217,7 +217,7 @@ void onMousePressed(int button, int state, int x, int y)
 		}
 		std::cout << std::endl;
 
-		if ((toolMode == TOOL_MODE::ORBIT || toolMode == TOOL_MODE::PAN) &&
+		if ((toolMode == TOOL_MODE::LOOK || toolMode == TOOL_MODE::PAN) &&
 			button == GLUT_MIDDLE_BUTTON) {
 			checkTool("");			
 		}
@@ -227,7 +227,7 @@ void onMousePressed(int button, int state, int x, int y)
 
 void onMouseMoved(int x, int y)
 {
-	if (toolMode == TOOL_MODE::ORBIT || 
+	if (toolMode == TOOL_MODE::LOOK ||
 		toolMode == TOOL_MODE::PAN ||
 		toolMode == TOOL_MODE::FIRST_PERSON) {
 
@@ -243,8 +243,8 @@ void onMouseMovedDelta(int dx, int dy)
 	if (toolMode == TOOL_MODE::PAN) {
 		global::camViewport.pan(dx, dy);
 	}
-	else if (toolMode == TOOL_MODE::ORBIT) {
-		global::camViewport.orbit(ORBIT_DISTANCE, dx, dy);
+	else if (toolMode == TOOL_MODE::LOOK) {
+		global::camViewport.lookAround(dx, dy);
 	}
 	else if (toolMode == TOOL_MODE::FIRST_PERSON) {
 		global::camViewport.lookAround(dx, dy);

@@ -63,8 +63,6 @@ void setupRendering()
    
 	// setup models
 	global::Man = new Model("assets/model/lost_empire/lost_empire.obj");
-	global::Man->translate(-10.0f, -13.0f, -8.0f);
-	global::Man->scale(0.5f, 0.35f, 0.5f);
 
 	// setup skybox
 	global::skybox = new Skybox({
@@ -79,11 +77,11 @@ void setupRendering()
 
 	// setup camera
 	global::camViewport = Camera(PROJECTION_TYPE::PERSPECTIVE, 	// main camera
-		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(0.0f, 0.0f, 0.0f), 
-		glm::vec3(-1.0f, -1.0f, 0.0f), 80.0f);
+		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(0.0f, 15.0f, 0.0f), 
+		0, 0, 80.0f);
 	global::camLight = Camera(PROJECTION_TYPE::ORTHOGONAL,	// light camera to produce depth map
 		std::vector<float>({ 0.1f, 500.0f, -10.0f, 10.0f, -10.0f, 10.0f }), 
-		glm::vec3(-31.75f, 26.05f, -97.72f), glm::vec3(-10.0f, -13.0f, -8.0f), 0);
+		glm::vec3(0.0f, 0.0f, 0.0f), 45.0f, 0.0f, 0);
 
 	// send to renderer
 	global::renderer = new Renderer();
@@ -135,6 +133,11 @@ int main(int argc, char *argv[])
 	ImGui_ImplGLUT_Init();
 	ImGui_ImplGLUT_InstallFuncs();
 	ImGui_ImplOpenGL3_Init();
+
+	float SCALE = 1.75f;
+	ImFontConfig cfg;
+	cfg.SizePixels = 13 * SCALE;
+	ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;
 
 	/* GLEW initialization */
 	initGlew();

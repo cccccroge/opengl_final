@@ -16,7 +16,7 @@ int initGlutContext(int argc, char *argv[])
 	glutInitWindowSize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
 	glutInitWindowPosition(center_x, center_y);
 
-	return glutCreateWindow("My Robot");
+	return glutCreateWindow("Snow Scene");
 }
 
 void initGlew(void)
@@ -46,6 +46,8 @@ void createMenu(void)
 
 void registerCallbacks(void)
 {
+	// some callbacks are overritten by imGui's later, but I have wired it up already
+	// so we should assume these are working as expect anyway
 	glutDisplayFunc(onDisplayRefresh);
 	glutReshapeFunc(onWindowReshaped);
 	glutCloseFunc(onWindowClosed);

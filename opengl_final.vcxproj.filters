@@ -126,6 +126,9 @@
     <ClInclude Include="include\windows\imGui\imgui_impl_opengl3.h">
       <Filter>third_party</Filter>
     </ClInclude>
+    <ClInclude Include="src\event\gui.h">
+      <Filter>src\event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="include\windows\imGui\imgui_impl_opengl3.cpp">
       <Filter>third_party</Filter>
+    </ClCompile>
+    <ClCompile Include="src\event\gui.cpp">
+      <Filter>src\event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

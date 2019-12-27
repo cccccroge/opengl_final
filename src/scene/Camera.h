@@ -16,15 +16,14 @@ class Camera : public SceneObject
 {
 public:
     Camera();
-    Camera(PROJECTION_TYPE type, std::vector<float> boundary, 
-        glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), 
-        glm::vec3 lookPos = glm::vec3(0.0f, 0.0f, 0.0f), 
+	Camera(PROJECTION_TYPE type, std::vector<float> boundary,
+		glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f),
+		float yaw = 0, float pitch = 0,
         float fov = glm::radians(60.0f));
 
     void zoom(int direction);
     void pan(int xRight, int yDown);
     void move(const char dir);
-    void orbit(float distance, int xRight, int yDown);
     void lookAround(int xRight, int yDown);
 
     glm::mat4 getViewMat();
@@ -32,9 +31,6 @@ public:
     
 private:
     PROJECTION_TYPE proj_type;
-    SceneObject lookPosObj;
-    SceneObject rightDirObj;
-    SceneObject upDirObj;
 
     // used in PERSPECTIVE
     float fov;  // rads
@@ -50,10 +46,15 @@ private:
     float top;
 
 public:
+	void setPos(glm::vec3 pos);
+	void setFov(float deg) { fov = glm::radians(deg); }
+	void setPitch(float deg) { pitch = deg; }
+	void setYaw(float deg) { yaw = deg; }
+
+	glm::vec3 getDirection(const char dir);
     glm::vec3 getPos();
+
 private:
-    glm::vec3 getDirection(const char which);
-    glm::vec3 getLookPos();
-    glm::vec3 getRightPos();
-    glm::vec3 getUpPos();
+	float yaw;
+	float pitch;
 };

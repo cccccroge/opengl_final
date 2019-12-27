@@ -5,6 +5,7 @@
 #include "freeGLUT/freeglut.h"
 #include "../utils.h"
 #include "../global.h"
+#include "../event/gui.h"
 #include <iostream>
 
 Renderer::Renderer() : main_camera(NULL)
@@ -83,18 +84,7 @@ void Renderer::RenderAll()
 		DrawScreen();
 
 	// 4.render imGui stuff
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGLUT_NewFrame();
-
-	ImGui::ShowDemoWindow();
-	/*ImGui::Begin("Hello, world!");
-	ImGui::Text("This is some useful text.");
-	ImGui::End();*/
-
-	ImGui::Render();
-	ImGuiIO& io = ImGui::GetIO();
-	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	DrawImGui();
 
     // 5.Finish all draw calls, now flip swap buffer
     glutSwapBuffers();
@@ -170,4 +160,17 @@ void Renderer::DrawScreen()
 	//global::postEffectBuffer->bindMeshOnly();
 	global::postEffectBuffer->bindScreen();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void Renderer::DrawImGui()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGLUT_NewFrame();
+
+	setupGui();
+	ImGui::Render();
+
+	ImGuiIO& io = ImGui::GetIO();
+	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

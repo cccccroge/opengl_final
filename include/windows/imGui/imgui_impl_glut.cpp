@@ -194,7 +194,8 @@ void ImGui_ImplGLUT_MouseFunc(int glut_button, int state, int x, int y)
     if (button != -1 && state == GLUT_UP)
         io.MouseDown[button] = false;
 
-	onMousePressed(glut_button, state, x, y);
+	if (!io.WantCaptureMouse)
+		onMousePressed(glut_button, state, x, y);
 }
 
 #ifdef __FREEGLUT_EXT_H__
@@ -208,7 +209,8 @@ void ImGui_ImplGLUT_MouseWheelFunc(int button, int dir, int x, int y)
         io.MouseWheel -= 1.0;
     (void)button; // Unused
 
-	onMouseWheelSpinned(button, dir, x, y);
+	if (!io.WantCaptureMouse)
+		onMouseWheelSpinned(button, dir, x, y);
 }
 #endif
 

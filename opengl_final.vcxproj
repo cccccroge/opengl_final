@@ -31,6 +31,7 @@
     <ClInclude Include="include\windows\STB\stb_image.h" />
     <ClInclude Include="include\windows\TinyOBJ\tiny_obj_loader.h" />
     <ClInclude Include="src\event\callback.h" />
+    <ClInclude Include="src\event\gui.h" />
     <ClInclude Include="src\event\keymap.h" />
     <ClInclude Include="src\global.h" />
     <ClInclude Include="src\init.h" />
@@ -63,6 +64,7 @@
     <ClCompile Include="include\windows\imGui\imgui_widgets.cpp" />
     <ClCompile Include="include\windows\STB\stb_image.cpp" />
     <ClCompile Include="src\event\callback.cpp" />
+    <ClCompile Include="src\event\gui.cpp" />
     <ClCompile Include="src\event\keymap.cpp" />
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\init.cpp" />

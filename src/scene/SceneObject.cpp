@@ -48,6 +48,17 @@ void SceneObject::translate(glm::vec3 vec)
 }
 
 
+void SceneObject::setTranslation(glm::vec3 trans)
+{
+	if (parent != NULL) {
+		translation_p = glm::translate(glm::mat4(1.0), trans);
+	}
+	else {
+		translation = glm::translate(glm::mat4(1.0), trans);
+	}
+}
+
+
 void SceneObject::rotate(float deg, std::vector<float> axis)
 {
 	rotate(deg, glm::vec3(axis[0], axis[1], axis[2]));
