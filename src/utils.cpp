@@ -121,6 +121,12 @@ char* file2Cstring(const char* file)
     return *srcp;
 }
 
+bool isFileExist(const char *path)
+{
+	std::ifstream infile(path);
+	return infile.good();
+}
+
 
 unsigned int GlutTimer::count = 0;
 bool GlutTimer::enabled = false;

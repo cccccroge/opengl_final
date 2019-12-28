@@ -4,9 +4,11 @@
 #include "GLM/ext/matrix_transform.hpp"
 #include "GLM/ext/matrix_clip_space.hpp"
 #include "GLM/gtx/projection.hpp"
+#include "GLM/gtx/spline.hpp"
 #include "../global.h"
 #include <iostream>
 #include <math.h>
+#include <fstream>
 
 
 Camera::Camera() : SceneObject(glm::vec3(0.0f, 0.0f, 0.0f))
@@ -152,5 +154,50 @@ glm::vec3 Camera::getDirection(const char dir)
 glm::vec3 Camera::getPos()
 {
     return glm::vec3(getModelMat()[3]);
+}
+
+
+void Camera::loadControlPts(const char *path, const int samples)
+{
+	if (isFileExist(path)) {
+		// clean vectors
+		control_pts.clear();
+		curve_pts.clear();
+
+		// read all points to vector
+		std::ifstream file(path);
+
+		float x, y, z;
+		while (file >> x >> y >> z) {
+			control_pts.push_back(glm::vec3(x, y, z));
+		}
+
+		std::cout << "has " << control_pts.size() << " points" << std::endl;
+
+	}
+	else {
+		std::cout << "invalid path!" << std::endl;
+		return;
+	}
+
+
+	int last = control_pts.size() - 1;
+	float dt = (float)last / samples;
+
+	for (float t = 0; t <= last; t += dt) {
+
+		// indices of the relevant control points
+		int i0 = glm::clamp<int>(t - 1, 0, last);
+		int i1 = glm::clamp<int>(t, 0, last);
+		int i2 = glm::clamp<int>(t + 1, 0, last);
+		int i3 = glm::clamp<int>(t + 2, 0, last);
+
+		// parameter on the local curve interval
+		float local_t = glm::fract(t);
+
+		glm::vec3 pts = glm::catmullRom(
+			control_pts[i0], control_pts[i1], control_pts[i2], control_pts[i3], local_t);
+		curve_pts.push_back(pts);
+	}
 }
 

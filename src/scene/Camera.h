@@ -28,6 +28,20 @@ public:
 
     glm::mat4 getViewMat();
     glm::mat4 getProjMat();
+
+	void setPos(glm::vec3 pos);
+	void setFov(float deg) { fov = glm::radians(deg); }
+	void setPitch(float deg) { pitch = deg; }
+	void setYaw(float deg) { yaw = deg; }
+	inline float getPitch() { return pitch; }
+	inline float getYaw() { return yaw; }
+
+	glm::vec3 getDirection(const char dir);
+	glm::vec3 getPos();
+
+	void loadControlPts(const char *path, const int samples);
+	inline bool hasCurvePts() { return curve_pts.size() != 0; }
+	inline std::vector<glm::vec3>& getCurvePts() { return curve_pts; }
     
 private:
     PROJECTION_TYPE proj_type;
@@ -45,18 +59,11 @@ private:
     float bottom;
     float top;
 
-public:
-	void setPos(glm::vec3 pos);
-	void setFov(float deg) { fov = glm::radians(deg); }
-	void setPitch(float deg) { pitch = deg; }
-	void setYaw(float deg) { yaw = deg; }
-    inline float getPitch() { return pitch; }
-    inline float getYaw() { return yaw; }
-
-	glm::vec3 getDirection(const char dir);
-    glm::vec3 getPos();
-
-private:
+	// use to calculate front position
 	float yaw;
 	float pitch;
+
+	// curve control points
+	std::vector<glm::vec3> control_pts;
+	std::vector<glm::vec3> curve_pts;
 };

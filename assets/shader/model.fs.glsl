@@ -148,6 +148,9 @@ vec3 spotLight()
 	}
 	else {
 
+		//float d = length(lightPos - blinnPhongData.fragPos);
+		//float fa = min(1 / (1.0 + 0.75 * d + 0.75 * d * d), 1.0); 
+
 		float intensity = 0.0;
 		if (theta <= lightCutoff)
 			intensity = clamp((theta - lightOuterCutoff) / (lightCutoff - lightOuterCutoff), 0.0, 1.0);
@@ -168,7 +171,7 @@ vec3 spotLight()
 			max(dot(normal_unit, halfway_unit), 0.0), specularPower);
 		vec3 specular = specular_value * specularAlbedo;
 
-		return ambient + intensity * (diffuse + specular);
+		return ambient + /* fa **/ intensity * (diffuse + specular);
 	}
 
 }

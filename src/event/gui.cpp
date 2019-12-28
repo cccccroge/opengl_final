@@ -58,6 +58,7 @@ void mainMenu()
 }
 
 static float fov = 80.0f;
+static float move_progress = 0.0;
 
 void cameraTool()
 {
@@ -117,6 +118,33 @@ void cameraTool()
 			}
 		}
 		ImGui::Text("curve navigation");
+		if (ImGui::Button("load curve")) {
+			global::camViewport.loadControlPts(
+				"assets/data/camera_curve.txt", 100);
+		}
+
+		if (ImGui::SliderFloat("move", &move_progress, 0, 1)) {
+			if (global::camViewport.hasCurvePts()) {
+
+				// set camera position
+				std::vector<glm::vec3> &pts = global::camViewport.getCurvePts();
+				int size = pts.size();
+				int current_i = int((size - 1) * move_progress);
+				glm::vec3 current_pos = pts[current_i];
+
+				global::camViewport.setPos(current_pos);
+
+				// set pitch and yaw according to direction
+				int next_i = (current_i + 1) % size;
+				glm::vec3 next_pos = pts[next_i];
+				glm::vec3 direction = glm::normalize(next_pos - current_pos);
+				float pitch = glm::degrees(asin(direction.y));
+				float yaw = glm::degrees(atan2(direction.x, direction.z))+180;
+
+				global::camViewport.setPitch(pitch);
+				global::camViewport.setYaw(yaw);	// what is the correct way?
+			}
+		}
 
 		ImGui::Unindent();
 
