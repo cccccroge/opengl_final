@@ -195,6 +195,6 @@ vec3 blinn_phong()
 void main()
 {
     vec3 blinn_phong_col = blinn_phong();
-    //vec3 add_shadow = blinn_phong_col * (1 - shadow_factor(shadowData.fragPos));
-    fragColor = vec4(blinn_phong_col, 1.0);
+    vec3 add_shadow = blinn_phong_col * (1 - shadow_factor(shadowData.fragPos));
+    fragColor = vec4(add_shadow, 1.0);
 }

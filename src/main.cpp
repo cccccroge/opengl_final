@@ -15,6 +15,8 @@
 #include "scene/Camera.h"
 #include "render/Renderer.h"
 #include "render/PostEffectBuffer.h"
+#include "event/timer.h"
+#include "event/gui.h"
 
 #include <iostream>
 
@@ -28,6 +30,7 @@ Texture* global::depthTex;
 Renderer* global::renderer;
 Model* global::Man;
 Skybox* global::skybox;
+Timer* global::travelTimer;
 
 
 void setupRendering()
@@ -62,16 +65,16 @@ void setupRendering()
 	global::program_shadow->compile();
    
 	// setup models
-	global::Man = new Model("assets/model/panda/panda.obj");
+	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
 
 	// setup skybox
 	global::skybox = new Skybox({
-		"assets/image/cubemaps/face-r.png",
-		"assets/image/cubemaps/face-l.png",
-		"assets/image/cubemaps/face-t.png",
-		"assets/image/cubemaps/face-d.png",
-		"assets/image/cubemaps/face-f.png",
-		"assets/image/cubemaps/face-b.png",
+		"assets/image/cubemap_forest/posx.png",
+		"assets/image/cubemap_forest/negx.png",
+		"assets/image/cubemap_forest/posy.png",
+		"assets/image/cubemap_forest/negy.png",
+		"assets/image/cubemap_forest/posz.png",
+		"assets/image/cubemap_forest/negz.png",
 	});
 	global::skybox->scale(1.0f, 1.0f, -1.0f);	// flip it for godsake!
 
@@ -120,6 +123,9 @@ void setupRendering()
 	global::program_model->setUniformVec3("specularAlbedo",
 		glm::vec3(0.7f, 0.7f, 0.7f));
 	global::program_model->setUniform1i("specularPower", 200);
+
+	// set up navigation travel tool timer
+	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);
 }
 
 
@@ -140,7 +146,7 @@ int main(int argc, char *argv[])
 	ImGui_ImplGLUT_InstallFuncs();
 	ImGui_ImplOpenGL3_Init();
 
-	float SCALE = 1.75f;
+	float SCALE = 1.25f;
 	ImFontConfig cfg;
 	cfg.SizePixels = 13 * SCALE;
 	ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;

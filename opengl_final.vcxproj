@@ -33,6 +33,7 @@
     <ClInclude Include="src\event\callback.h" />
     <ClInclude Include="src\event\gui.h" />
     <ClInclude Include="src\event\keymap.h" />
+    <ClInclude Include="src\event\Timer.h" />
     <ClInclude Include="src\global.h" />
     <ClInclude Include="src\init.h" />
     <ClInclude Include="src\mesh_data\CubemapTexture.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="src\event\callback.cpp" />
     <ClCompile Include="src\event\gui.cpp" />
     <ClCompile Include="src\event\keymap.cpp" />
+    <ClCompile Include="src\event\Timer.cpp" />
     <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\init.cpp" />
     <ClCompile Include="src\main.cpp" />

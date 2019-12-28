@@ -129,6 +129,9 @@
     <ClInclude Include="src\event\gui.h">
       <Filter>src\event</Filter>
     </ClInclude>
+    <ClInclude Include="src\event\Timer.h">
+      <Filter>src\event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -225,6 +228,9 @@
       <Filter>third_party</Filter>
     </ClCompile>
     <ClCompile Include="src\event\gui.cpp">
+      <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\event\Timer.cpp">
       <Filter>src\event</Filter>
     </ClCompile>
   </ItemGroup>
