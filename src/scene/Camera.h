@@ -50,6 +50,8 @@ public:
 	void setFov(float deg) { fov = glm::radians(deg); }
 	void setPitch(float deg) { pitch = deg; }
 	void setYaw(float deg) { yaw = deg; }
+    inline float getPitch() { return pitch; }
+    inline float getYaw() { return yaw; }
 
 	glm::vec3 getDirection(const char dir);
     glm::vec3 getPos();

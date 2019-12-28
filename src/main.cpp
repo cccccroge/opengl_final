@@ -62,7 +62,7 @@ void setupRendering()
 	global::program_shadow->compile();
    
 	// setup models
-	global::Man = new Model("assets/model/lost_empire/lost_empire.obj");
+	global::Man = new Model("assets/model/panda/panda.obj");
 
 	// setup skybox
 	global::skybox = new Skybox({
@@ -107,7 +107,7 @@ void setupRendering()
 	// set up uniforms in first program
 	global::program_model->bind();
 	global::program_model->setUniformVec3("lightPos", 
-		glm::vec3(-31.75f, 26.05f, -97.72f));
+		global::camLight.getPos());
 	global::program_model->setUniform1f("ambientStrength", 0.0f);
 	global::program_model->setUniformVec3("ambientAlbedo",
 		glm::vec3(1.0f, 1.0f, 1.0f));

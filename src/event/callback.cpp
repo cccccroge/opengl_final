@@ -94,10 +94,16 @@ void onKeyboardPressed(unsigned char key, int x, int y)
 		switch(key) {
 			case 'p':
 				glm::vec3 pos = global::camViewport.getPos();
+				float yaw = global::camViewport.getYaw();
+				float pitch = global::camViewport.getPitch();
 				std::cout << "camera pos: (" 
 					<< pos.x << ", "
 					<< pos.y << ", "
-					<< pos.z << ")\t" << std::endl;
+					<< pos.z << ")\t" 
+					<< "yaw: " 
+					<< yaw << ", pitch: "
+					<< pitch
+					<< std::endl;
 				break;
 		}
 	}

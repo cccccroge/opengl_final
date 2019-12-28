@@ -72,10 +72,14 @@ void cameraTool()
 		ImGui::Indent();
 		static int p = 0;
 		if (ImGui::RadioButton("place A", &p, 0)) {
-			global::camViewport.setPos(glm::vec3(0, 3.0, 0));
+			global::camViewport.setPos(glm::vec3(3.44579, 11.9493, 3.00064));
+			global::camViewport.setYaw(-114.4);
+			global::camViewport.setPitch(-24.8);
 		}
 		if (ImGui::RadioButton("place B", &p, 1)) {
-
+			global::camViewport.setPos(glm::vec3(-9.35994, 9.0583, 11.9962));
+			global::camViewport.setYaw(-49.2);
+			global::camViewport.setPitch(-9.99997);
 		}
 		ImGui::Unindent();
 	ImGui::Separator();
@@ -103,6 +107,10 @@ void lightTool()
 	ImGui::Indent();
 	if (ImGui::SliderFloat3("position", pos, -300, 300)) {
 		global::camLight.setPos(glm::vec3(pos[0], pos[1], pos[2]));
+
+		global::program_model->bind();
+		global::program_model->setUniformVec3("lightPos", 
+			global::camLight.getPos());
 	}
 	if (ImGui::SliderFloat("pitch", &angle, -89, 89)) {
 		global::camLight.setPitch(angle);
