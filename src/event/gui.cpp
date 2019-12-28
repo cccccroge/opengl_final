@@ -4,6 +4,8 @@
 #include "imGui/imgui_impl_opengl3.h"
 #include "../utils.h"
 #include "../global.h"
+#include <iostream>
+#include <fstream> 
 
 void setupGui()
 {
@@ -85,6 +87,37 @@ void cameraTool()
 	ImGui::Separator();
 
 	ImGui::BulletText("Navigation mode");
+		ImGui::Indent();
+		ImGui::Text("record positions");
+		if (!record_mode_enable) {
+			if (ImGui::ArrowButton("arrow button", ImGuiDir_Right)) {
+				record_mode_enable = true;
+				curve_points_file = new std::ofstream(
+					"assets/data/camera_curve.txt");
+			}
+		}
+		else {
+			if (ImGui::Button("stop recording")) {
+				record_mode_enable = false;
+				curve_points_file->close();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("add control point")) {
+				glm::vec3 camPos = global::camViewport.getPos();
+
+				if (curve_points_file->is_open()) {
+					*curve_points_file << camPos[0] << " " 
+						<< camPos[1] << " "
+						<< camPos[2] << std::endl;
+				}
+				else {
+					std::cout << "data file not open yet!" << std::endl;
+				}
+			}
+		}
+		ImGui::Text("curve navigation");
+
+		ImGui::Unindent();
 
 
 	ImGui::End();
@@ -103,9 +136,18 @@ void lightTool()
 {
 	ImGui::Begin("Light tool");
 
-	ImGui::BulletText("Sun setting");
+	ImGui::BulletText("Light setting");
 	ImGui::Indent();
-	if (ImGui::SliderFloat3("position", pos, -300, 300)) {
+	static int m = 0;
+	if (ImGui::RadioButton("directional light", &m, 0)) {
+		global::program_model->bind();
+		global::program_model->setUniform1i("lightMode", 0);
+	}
+	if (ImGui::RadioButton("point light", &m, 1)) {
+		global::program_model->bind();
+		global::program_model->setUniform1i("lightMode", 1);
+	}
+	if (ImGui::SliderFloat3("position", pos, -10, 10)) {
 		global::camLight.setPos(glm::vec3(pos[0], pos[1], pos[2]));
 
 		global::program_model->bind();
@@ -114,9 +156,17 @@ void lightTool()
 	}
 	if (ImGui::SliderFloat("pitch", &angle, -89, 89)) {
 		global::camLight.setPitch(angle);
+
+		global::program_model->bind();
+		global::program_model->setUniformVec3("lightDir",
+			global::camLight.getDirection('f'));
 	}
 	if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
 		global::camLight.setYaw(yaw);
+
+		global::program_model->bind();
+		global::program_model->setUniformVec3("lightDir",
+			global::camLight.getDirection('f'));
 	}
 
 	ImGui::Unindent();

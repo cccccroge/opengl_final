@@ -105,6 +105,7 @@ void onKeyboardPressed(unsigned char key, int x, int y)
 					<< pitch
 					<< std::endl;
 				break;
+
 		}
 	}
 	else if (toolMode == TOOL_MODE::FIRST_PERSON) {

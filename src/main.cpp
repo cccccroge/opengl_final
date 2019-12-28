@@ -106,8 +106,11 @@ void setupRendering()
 
 	// set up uniforms in first program
 	global::program_model->bind();
+	global::program_model->setUniform1i("lightMode", 0);	// default: directional light
 	global::program_model->setUniformVec3("lightPos", 
 		global::camLight.getPos());
+	global::program_model->setUniformVec3("lightDir",
+		global::camLight.getDirection('f'));
 	global::program_model->setUniform1f("ambientStrength", 0.0f);
 	global::program_model->setUniformVec3("ambientAlbedo",
 		glm::vec3(1.0f, 1.0f, 1.0f));
