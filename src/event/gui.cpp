@@ -6,6 +6,7 @@
 #include "../global.h"
 #include <iostream>
 #include <fstream> 
+#include "GLM/trigonometric.hpp"
 
 void setupGui()
 {
@@ -129,47 +130,63 @@ void weatherTool()
 }
 
 static float pos[3] = { 0, 0, 0 };
-static float angle = 45;
+static float pitch = 45;
 static float yaw = 0;
+static float cutoff = 15.0;
+static float outerCutoff = 18.0f;
 
 void lightTool()
 {
 	ImGui::Begin("Light tool");
 
 	ImGui::BulletText("Light setting");
-	ImGui::Indent();
-	static int m = 0;
-	if (ImGui::RadioButton("directional light", &m, 0)) {
-		global::program_model->bind();
-		global::program_model->setUniform1i("lightMode", 0);
-	}
-	if (ImGui::RadioButton("point light", &m, 1)) {
-		global::program_model->bind();
-		global::program_model->setUniform1i("lightMode", 1);
-	}
-	if (ImGui::SliderFloat3("position", pos, -10, 10)) {
-		global::camLight.setPos(glm::vec3(pos[0], pos[1], pos[2]));
+		ImGui::Indent();
 
-		global::program_model->bind();
-		global::program_model->setUniformVec3("lightPos", 
-			global::camLight.getPos());
-	}
-	if (ImGui::SliderFloat("pitch", &angle, -89, 89)) {
-		global::camLight.setPitch(angle);
+		static int m = 0;
+		if (ImGui::RadioButton("directional light", &m, 0)) {
+			global::program_model->bind();
+			global::program_model->setUniform1i("lightMode", 0);
+		}
+		if (ImGui::RadioButton("point light", &m, 1)) {
+			global::program_model->bind();
+			global::program_model->setUniform1i("lightMode", 1);
+		}
+		if (ImGui::RadioButton("spot light", &m, 2)) {
+			global::program_model->bind();
+			global::program_model->setUniform1i("lightMode", 2);
+		}
 
-		global::program_model->bind();
-		global::program_model->setUniformVec3("lightDir",
-			global::camLight.getDirection('f'));
-	}
-	if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
-		global::camLight.setYaw(yaw);
+		if (ImGui::SliderFloat3("position", pos, -20, 20)) {
+			global::camLight.setPos(glm::vec3(pos[0], pos[1], pos[2]));
 
-		global::program_model->bind();
-		global::program_model->setUniformVec3("lightDir",
-			global::camLight.getDirection('f'));
-	}
+			global::program_model->bind();
+			global::program_model->setUniformVec3("lightPos", 
+				global::camLight.getPos());
+		}
+		if (ImGui::SliderFloat("pitch", &pitch, -89, 89)) {
+			global::camLight.setPitch(pitch);
 
-	ImGui::Unindent();
+			global::program_model->bind();
+			global::program_model->setUniformVec3("lightDir",
+				global::camLight.getDirection('f'));
+		}
+		if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
+			global::camLight.setYaw(yaw);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("lightDir",
+				global::camLight.getDirection('f'));
+		}
+		if (ImGui::SliderFloat("cufoff angle", &cutoff, 0, 180)) {
+			global::program_model->bind();
+			global::program_model->setUniform1f("lightCutoff", cos(glm::radians(cutoff)));
+		}
+		if (ImGui::SliderFloat("outer cufoff angle", &outerCutoff, 0, 180)) {
+			global::program_model->bind();
+			global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(outerCutoff)));
+		}
+
+		ImGui::Unindent();
 
 
 	ImGui::End();

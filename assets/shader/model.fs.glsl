@@ -24,6 +24,8 @@ in ShadowData
 uniform int lightMode;
 uniform vec3 lightPos;
 uniform vec3 lightDir;
+uniform float lightCutoff;	// in radians
+uniform float lightOuterCutoff;
 
 uniform vec3 viewPos;
 uniform float ambientStrength;
@@ -112,7 +114,7 @@ vec3 directionalLight()
 vec3 pointLight()                                        
 {                
 	float d = length(lightPos - blinnPhongData.fragPos);
-	float fa = min(1 / (1.0 + 1.0 * d + 1.0 * d * d), 1.0); 
+	float fa = min(1 / (1.0 + 0.75 * d + 0.75 * d * d), 1.0); 
 
 	// Ambient
     vec3 ambient = ambientStrength * ambientAlbedo;
@@ -134,6 +136,43 @@ vec3 pointLight()
     return ambient + fa * (diffuse + specular);
 } 
 
+vec3 spotLight()
+{
+	float theta = dot(normalize(lightPos - blinnPhongData.fragPos), normalize(-lightDir));
+
+	// Ambient
+    vec3 ambient = ambientStrength * ambientAlbedo;
+
+	if (theta <= lightOuterCutoff) {
+		return ambient;
+	}
+	else {
+
+		float intensity = 0.0;
+		if (theta <= lightCutoff)
+			intensity = clamp((theta - lightOuterCutoff) / (lightCutoff - lightOuterCutoff), 0.0, 1.0);
+		else
+			intensity = 1.0;
+		
+		// Diffuse
+		vec3 normal_unit = normalize(blinnPhongData.normal);
+		vec3 light_dir_unit = -normalize(lightPos - blinnPhongData.fragPos);
+		float diffuse_value = max(dot(normal_unit, -light_dir_unit), 0.0);
+		vec3 diffuseAlbedo = vec3(texture(tex, vertexData.texCoord));
+		vec3 diffuse = diffuse_value * diffuseAlbedo;
+
+		// Specular
+		vec3 view_dir_unit = normalize(viewPos - blinnPhongData.fragPos);
+		vec3 halfway_unit = normalize(-light_dir_unit + view_dir_unit);
+		float specular_value = pow(
+			max(dot(normal_unit, halfway_unit), 0.0), specularPower);
+		vec3 specular = specular_value * specularAlbedo;
+
+		return ambient + intensity * (diffuse + specular);
+	}
+
+}
+
 vec3 blinn_phong()
 {
 	// directional light
@@ -146,6 +185,7 @@ vec3 blinn_phong()
 	}
 	// spot light
 	else if (lightMode == 2) {
+		return spotLight();
 	}
 }
 

@@ -111,6 +111,9 @@ void setupRendering()
 		global::camLight.getPos());
 	global::program_model->setUniformVec3("lightDir",
 		global::camLight.getDirection('f'));
+	global::program_model->setUniform1f("lightCutoff", cos(glm::radians(15.0f)));
+	global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(18.0f)));
+	
 	global::program_model->setUniform1f("ambientStrength", 0.0f);
 	global::program_model->setUniformVec3("ambientAlbedo",
 		glm::vec3(1.0f, 1.0f, 1.0f));
