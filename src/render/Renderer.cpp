@@ -133,7 +133,7 @@ void Renderer::DrawModels()
 		for (auto meshPtr : modelPtr->getMeshes()) {
 			global::depthTex->bind(*global::program_model,    // use in shadow mapping
 				"shadowMap", 1);
-			meshPtr->bind(*global::program_model, "tex");
+			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
 				GL_UNSIGNED_INT, 0);
 		}

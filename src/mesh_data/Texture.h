@@ -6,12 +6,21 @@
 #include <string>
 
 
+enum class TEXTURE_TYPE
+{
+	NONE,
+	DIFFUSE,
+	SPECULAR,
+	NORMAL,
+};
+
 class Texture
 {
 public:
-    Texture(const char *path);
-    Texture(const int width, const int height);
-    Texture(int usage, const int width, const int height);  //TODO: generalize?
+    Texture(const char *path, TEXTURE_TYPE t = TEXTURE_TYPE::NONE);
+    Texture(const int width, const int height, TEXTURE_TYPE t = TEXTURE_TYPE::NONE);
+    Texture(int usage, const int width, const int height, 
+		TEXTURE_TYPE t = TEXTURE_TYPE::NONE);  //TODO: generalize?
     ~Texture();
 
     void setUp();
@@ -21,12 +30,13 @@ public:
 
     inline const char* getPath() { return path; }
     inline GLuint getTbo() { return tbo; }
+	inline TEXTURE_TYPE getMatType() { return mat_type; }
 
 private:
     int width;
     int height;
     unsigned char *data;
-    std::string type;   //TODO: what to do with this?
+	TEXTURE_TYPE mat_type;
     const char *path;   // absolute path get from Model
 
     GLuint tbo;

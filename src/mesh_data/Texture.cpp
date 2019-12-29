@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-Texture::Texture(const char *path) : 
-    width(0), height(0), data(NULL), type(""), path(path)
+Texture::Texture(const char *path, TEXTURE_TYPE t/* = TEXTURE_TYPE::NONE*/) :
+    width(0), height(0), data(NULL), mat_type(t), path(path)
 {
 	stbi_set_flip_vertically_on_load(1);
 
@@ -19,15 +19,17 @@ Texture::Texture(const char *path) :
 	}
 }
 
-Texture::Texture(const int width, const int height) : 
-    width(width), height(height), data(NULL), type(""), path(NULL)
+Texture::Texture(const int width, const int height, 
+	TEXTURE_TYPE t/* = TEXTURE_TYPE::NONE*/) :
+    width(width), height(height), data(NULL), mat_type(t), path(NULL)
 {
 	setUp();
 }
 
 // for now this texture is served as a depth map (usage is garbage)
-Texture::Texture(int usage, const int width, const int height) :
-	width(width), height(height), data(NULL), type(""), path(NULL)
+Texture::Texture(int usage, const int width, const int height, 
+	TEXTURE_TYPE t/* = TEXTURE_TYPE::NONE*/) :
+	width(width), height(height), data(NULL), mat_type(t), path(NULL)
 {
 	glGenTextures(1, &tbo);
     //glActiveTexture(GL_TEXTURE0);
@@ -80,8 +82,7 @@ void Texture::bind(ShaderProgram &program, const std::string sampler_name,
     glActiveTexture(GL_TEXTURE0 + index);
 	glBindTexture(GL_TEXTURE_2D, tbo);
 	program.bind();
-	program.setUniform1i((sampler_name /*+ std::to_string(index)*/).c_str(), 
-		(GLint)index);
+	program.setUniform1i((sampler_name).c_str(), (GLint)index);
 }
 
 

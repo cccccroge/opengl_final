@@ -103,16 +103,20 @@ Mesh* Model::convertMesh(const aiScene *scene, const aiMesh *mesh)
 			<< "x" << std::endl;
 		std::cout << "SPECULAR: " << mat->GetTextureCount(aiTextureType_SPECULAR)
 			<< "x" << std::endl;
+		std::cout << "NORMAL: " << mat->GetTextureCount(aiTextureType_NORMALS)
+			<< "x" << std::endl;
 		std::cout << "AMBIENT: " << mat->GetTextureCount(aiTextureType_AMBIENT)
 			<< "x" << std::endl;
 		std::cout << "OPACITY: " << mat->GetTextureCount(aiTextureType_OPACITY)
 			<< "x" << std::endl;
 		std::cout << "UNKNOWN: " << mat->GetTextureCount(aiTextureType_UNKNOWN)
 			<< "x" << std::endl;
+
 		
 		std::cout << "converting DIFFUSE textures..." << std::endl;
 		for (int i = 0; i < mat->
 			GetTextureCount(aiTextureType_DIFFUSE); ++i) {
+
 			aiString str;
 			mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
 			// convert to relative path if is absolute
@@ -137,11 +141,14 @@ Mesh* Model::convertMesh(const aiScene *scene, const aiMesh *mesh)
 			// not found in cache
 			if (!found) {
 				std::cout << "not in cache: "<< current << std::endl;
-				Texture *tex = new Texture((directory + current).c_str());
+				Texture *tex = new Texture((directory + current).c_str(), 
+					TEXTURE_TYPE::DIFFUSE);
 				targetMesh->pushTexture(tex);
 				textures_loaded.push_back(tex);
 			}
 		}
+
+		// TODO: more maps and multiple same maps?
 	}
 
 	return targetMesh;

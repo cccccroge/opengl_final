@@ -25,7 +25,7 @@ public:
     inline int getIndicesNum() { return indices.size(); }
 
     void setUp();
-    void bind(ShaderProgram &program, const std::string tex_prefix);
+    void bind(ShaderProgram &program);
     void bind();
     void unbind();
 
@@ -37,4 +37,5 @@ private:
     // assume each vertex in a Mesh has same format
     // so we use the same VertexArray to render
     VertexArray *vertex_arr;
+
 };

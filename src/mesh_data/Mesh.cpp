@@ -43,11 +43,18 @@ void Mesh::setUp()
 
 
 /* bind textures and vao */
-void Mesh::bind(ShaderProgram &program, const std::string tex_prefix)
+void Mesh::bind(ShaderProgram &program)
 {
     //std::cout << "binding textures: " << textures.size() << " x" << std::endl;
+	program.setUniform1i("material.has_diff_map", 0);
+	program.setUniform1i("material.has_spec_map", 0);
+	program.setUniform1i("material.has_norm_map", 0);
+
     for (int i = 0; i < textures.size(); ++i) {
-        textures[i]->bind(program, tex_prefix, i);
+		if (textures[i]->getMatType() == TEXTURE_TYPE::DIFFUSE) {
+			textures[i]->bind(program, "material.diffuseMap", i);
+			program.setUniform1i("material.has_diff_map", 1);
+		}
     }
     vertex_arr->bind();
 }

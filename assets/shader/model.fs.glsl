@@ -21,22 +21,40 @@ in ShadowData
 
 } shadowData;
 
+// Lighting stuff
 uniform int lightMode;
 uniform vec3 lightPos;
 uniform vec3 lightDir;
 uniform float lightCutoff;	// in radians
 uniform float lightOuterCutoff;
 
+// Camera stuff
 uniform vec3 viewPos;
-uniform float ambientStrength;
-uniform vec3 ambientAlbedo;
-//uniform vec3 diffuseAlbedo;
-uniform vec3 specularAlbedo;
-uniform int specularPower;
 
+// Material stuff
+uniform struct Material {
+
+	bool has_diff_map;
+	sampler2D diffuseMap;
+
+	bool has_spec_map;
+	sampler2D specularMap;
+
+	bool has_norm_map;
+	sampler2D normalMap;
+
+} material;
+
+
+uniform float ambientStrength = 0.0;
+uniform vec3 ambientAlbedo = vec3(1.0, 1.0, 1.0);
+uniform vec3 default_diffuseAlbedo = vec3(0.2, 0.2, 0.2);
+uniform vec3 default_specularAlbedo = vec3(0.5, 0.5, 0.5);
+uniform int specularPower = 200;
+
+// others
 uniform samplerCube skybox;
 uniform sampler2D shadowMap;
-uniform sampler2D tex;
 
 layout(location = 0) out vec4 fragColor;
 
@@ -89,24 +107,84 @@ float shadow_factor(vec4 fragPos)   // light space
     return shadow_factor;
 }
 
+
+/*-------------------------------------*/
+/*	   Helper unit vector functions	   */
+/*-------------------------------------*/
+
+// from object surface, in world space
+vec3 normal_unit()
+{
+	return normalize(blinnPhongData.normal);
+}
+
+// from light source to object, in world space
+vec3 light_dir_unit(bool isDirectional)
+{
+	if (isDirectional)
+		return normalize(lightDir);
+	else
+		return -normalize(lightPos - blinnPhongData.fragPos);
+}
+
+// from camera to object, in world space
+vec3 view_dir_unit()
+{
+	return normalize(viewPos - blinnPhongData.fragPos);
+}
+
+// from object surface, in world space
+vec3 halfway_unit(bool isDirectional)
+{
+	return normalize(-light_dir_unit(isDirectional) + -view_dir_unit());
+}
+
+
+/*-------------------------------------*/
+/*	   Helper Blinn-Phong functions	   */
+/*-------------------------------------*/
+
+vec3 diffuseAlbedo()
+{
+	if (material.has_diff_map)
+		return vec3(texture(material.diffuseMap, vertexData.texCoord));
+	else
+		return default_diffuseAlbedo;
+}
+
+float diffuseValue(int type)
+{
+	vec3 light_dir_unit = type == 0 ? light_dir_unit(true) : light_dir_unit(false);
+
+	return max(dot(normal_unit(), -light_dir_unit), 0.0);
+}
+
+vec3 specularAlbedo()
+{
+	if (material.has_spec_map)
+		return vec3(texture(material.specularMap, vertexData.texCoord));
+	else
+		return default_specularAlbedo;
+}
+
+float specularValue(int type)
+{
+	vec3 halfway_unit = type == 0 ? halfway_unit(true) : halfway_unit(false);
+
+	return pow(
+		max(dot(normal_unit(), halfway_unit), 0.0), specularPower);
+}
+
+
+/*-------------------------------------*/
+/*	 Calculate Blinn-Phong lightings   */
+/*-------------------------------------*/
+
 vec3 directionalLight()                                  
 {                     
-	// Ambient
     vec3 ambient = ambientStrength * ambientAlbedo;
-
-    // Diffuse
-    vec3 normal_unit = normalize(blinnPhongData.normal);
-    vec3 light_dir_unit = normalize(lightDir);
-    float diffuse_value = max(dot(normal_unit, -light_dir_unit), 0.0);
-    vec3 diffuseAlbedo = vec3(texture(tex, vertexData.texCoord));
-    vec3 diffuse = diffuse_value * diffuseAlbedo;
-
-    // Specular
-    vec3 view_dir_unit = normalize(viewPos - blinnPhongData.fragPos);
-    vec3 halfway_unit = normalize(-light_dir_unit + view_dir_unit);
-    float specular_value = pow(
-        max(dot(normal_unit, halfway_unit), 0.0), specularPower);
-    vec3 specular = specular_value * specularAlbedo;
+    vec3 diffuse = diffuseValue(0) * diffuseAlbedo();
+    vec3 specular = specularValue(0) * specularAlbedo();
 
     return ambient + diffuse + specular;                        
 }                                                                              
@@ -116,31 +194,17 @@ vec3 pointLight()
 	float d = length(lightPos - blinnPhongData.fragPos);
 	float fa = min(1 / (1.0 + 0.75 * d + 0.75 * d * d), 1.0); 
 
-	// Ambient
     vec3 ambient = ambientStrength * ambientAlbedo;
-
-    // Diffuse
-    vec3 normal_unit = normalize(blinnPhongData.normal);
-    vec3 light_dir_unit = -normalize(lightPos - blinnPhongData.fragPos);
-    float diffuse_value = max(dot(normal_unit, -light_dir_unit), 0.0);
-    vec3 diffuseAlbedo = vec3(texture(tex, vertexData.texCoord));
-    vec3 diffuse = diffuse_value * diffuseAlbedo;
-
-    // Specular
-    vec3 view_dir_unit = normalize(viewPos - blinnPhongData.fragPos);
-    vec3 halfway_unit = normalize(-light_dir_unit + view_dir_unit);
-    float specular_value = pow(
-        max(dot(normal_unit, halfway_unit), 0.0), specularPower);
-    vec3 specular = specular_value * specularAlbedo;
+    vec3 diffuse = diffuseValue(1) * diffuseAlbedo();
+    vec3 specular = specularValue(1) * specularAlbedo();
 
     return ambient + fa * (diffuse + specular);
 } 
 
 vec3 spotLight()
 {
-	float theta = dot(normalize(lightPos - blinnPhongData.fragPos), normalize(-lightDir));
+	float theta = dot(light_dir_unit(false), normalize(lightDir));
 
-	// Ambient
     vec3 ambient = ambientStrength * ambientAlbedo;
 
 	if (theta <= lightOuterCutoff) {
@@ -148,32 +212,17 @@ vec3 spotLight()
 	}
 	else {
 
-		//float d = length(lightPos - blinnPhongData.fragPos);
-		//float fa = min(1 / (1.0 + 0.75 * d + 0.75 * d * d), 1.0); 
-
 		float intensity = 0.0;
 		if (theta <= lightCutoff)
 			intensity = clamp((theta - lightOuterCutoff) / (lightCutoff - lightOuterCutoff), 0.0, 1.0);
 		else
 			intensity = 1.0;
 		
-		// Diffuse
-		vec3 normal_unit = normalize(blinnPhongData.normal);
-		vec3 light_dir_unit = -normalize(lightPos - blinnPhongData.fragPos);
-		float diffuse_value = max(dot(normal_unit, -light_dir_unit), 0.0);
-		vec3 diffuseAlbedo = vec3(texture(tex, vertexData.texCoord));
-		vec3 diffuse = diffuse_value * diffuseAlbedo;
+		vec3 diffuse = diffuseValue(2) * diffuseAlbedo();
+		vec3 specular = specularValue(2) * specularAlbedo();
 
-		// Specular
-		vec3 view_dir_unit = normalize(viewPos - blinnPhongData.fragPos);
-		vec3 halfway_unit = normalize(-light_dir_unit + view_dir_unit);
-		float specular_value = pow(
-			max(dot(normal_unit, halfway_unit), 0.0), specularPower);
-		vec3 specular = specular_value * specularAlbedo;
-
-		return ambient + /* fa **/ intensity * (diffuse + specular);
+		return ambient + intensity * (diffuse + specular);
 	}
-
 }
 
 vec3 blinn_phong()

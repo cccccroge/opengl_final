@@ -117,12 +117,6 @@ void setupRendering()
 	global::program_model->setUniform1f("lightCutoff", cos(glm::radians(15.0f)));
 	global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(18.0f)));
 	
-	global::program_model->setUniform1f("ambientStrength", 0.0f);
-	global::program_model->setUniformVec3("ambientAlbedo",
-		glm::vec3(1.0f, 1.0f, 1.0f));
-	global::program_model->setUniformVec3("specularAlbedo",
-		glm::vec3(0.7f, 0.7f, 0.7f));
-	global::program_model->setUniform1i("specularPower", 200);
 
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);
