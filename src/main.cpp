@@ -108,7 +108,7 @@ void setupRendering()
 	global::depthMapBuffer->attachEmptyColorBuffer();
 	global::depthMapBuffer->validate();
 
-	// set up uniforms in first program
+	// set up uniforms programs
 	global::program_model->bind();
 	global::program_model->setUniform1i("lightMode", 0);	// default: directional light
 	global::program_model->setUniformVec3("lightPos", 
@@ -118,6 +118,8 @@ void setupRendering()
 	global::program_model->setUniform1f("lightCutoff", cos(glm::radians(15.0f)));
 	global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(18.0f)));
 	
+	global::program_posteffect->bind();
+	global::program_posteffect->setUniform1f("gamma", 1.3f);
 
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);

@@ -204,6 +204,9 @@ vec3 pointLight()
 
 vec3 spotLight()
 {
+	float d = length(lightPos - blinnPhongData.fragPos);
+	float fa = min(1 / (1.0 + 0.1 * d + 0.1 * d * d), 1.0);
+
 	float theta = dot(light_dir_unit(false), normalize(lightDir));
 
     vec3 ambient = ambientStrength * ambientAlbedo();
@@ -222,7 +225,7 @@ vec3 spotLight()
 		vec3 diffuse = diffuseValue(2) * diffuseAlbedo();
 		vec3 specular = specularValue(2) * specularAlbedo();
 
-		return ambient + intensity * (diffuse + specular);
+		return ambient + intensity * fa * (diffuse + specular);
 	}
 }
 

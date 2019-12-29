@@ -58,6 +58,7 @@ void mainMenu()
 }
 
 static float fov = 80.0f;
+static float gamma = 1.5f;
 static float move_progress = 0.0;
 
 void cameraTool()
@@ -68,6 +69,10 @@ void cameraTool()
 		ImGui::Indent();
 		if (ImGui::SliderFloat("fov", &fov, 30.0f, 150.0f)) {
 			global::camViewport.setFov(fov);
+		}
+		if (ImGui::SliderFloat("gamma value", &gamma, 1.0f, 4.0f)) {
+			global::program_posteffect->bind();
+			global::program_posteffect->setUniform1f("gamma", gamma);
 		}
 		ImGui::Unindent();
 	ImGui::Separator();

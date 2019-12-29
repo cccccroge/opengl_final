@@ -7,14 +7,14 @@ in ScreenData
 } screenData;
 
 uniform sampler2D screenTex;
-
+uniform float gamma;
 
 layout(location = 0) out vec4 fragColor;
 
 
 void main()
 {
-    fragColor = texture(screenTex, screenData.texCoord);
-    // float depthValue = texture(screenTex, screenData.texCoord).r;
-    // fragColor = vec4(vec3(depthValue), 1.0);
+    vec3 color = texture(screenTex, screenData.texCoord).xyz;
+    vec3 gamma_correct = pow(color, vec3(1.0 / gamma));
+    fragColor = vec4(gamma_correct, 1.0);
 }
