@@ -26,6 +26,8 @@ public:
 private:
 	void processNode(const aiScene *scene, const aiNode *node);
 	Mesh* convertMesh(const aiScene *scene, const aiMesh *mesh);
+	void retrieveTextures(
+		const aiMaterial *mat, const aiTextureType type, Mesh *target);
 
 private:
 	std::vector<Mesh*> meshes;

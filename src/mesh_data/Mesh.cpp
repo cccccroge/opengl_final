@@ -55,6 +55,14 @@ void Mesh::bind(ShaderProgram &program)
 			textures[i]->bind(program, "material.diffuseMap", i);
 			program.setUniform1i("material.has_diff_map", 1);
 		}
+		else if (textures[i]->getMatType() == TEXTURE_TYPE::SPECULAR) {
+			textures[i]->bind(program, "material.specularMap", i);
+			program.setUniform1i("material.has_spec_map", 1);
+		}
+		else if (textures[i]->getMatType() == TEXTURE_TYPE::NORMAL) {
+			/*textures[i]->bind(program, "material.normalMap", i);
+			program.setUniform1i("material.has_norm_map", 1);*/
+		}
     }
     vertex_arr->bind();
 }

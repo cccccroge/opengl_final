@@ -65,7 +65,8 @@ void setupRendering()
 	global::program_shadow->compile();
    
 	// setup models
-	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
+	//global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
+	global::Man = new Model("assets/model/ball/ball.obj");
 
 	// setup skybox
 	global::skybox = new Skybox({

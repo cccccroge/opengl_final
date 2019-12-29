@@ -103,55 +103,74 @@ Mesh* Model::convertMesh(const aiScene *scene, const aiMesh *mesh)
 			<< "x" << std::endl;
 		std::cout << "SPECULAR: " << mat->GetTextureCount(aiTextureType_SPECULAR)
 			<< "x" << std::endl;
-		std::cout << "NORMAL: " << mat->GetTextureCount(aiTextureType_NORMALS)
+		std::cout << "SHININESS: " << mat->GetTextureCount(aiTextureType_SHININESS)
 			<< "x" << std::endl;
-		std::cout << "AMBIENT: " << mat->GetTextureCount(aiTextureType_AMBIENT)
+		std::cout << "NORMALS: " << mat->GetTextureCount(aiTextureType_NORMALS)
 			<< "x" << std::endl;
-		std::cout << "OPACITY: " << mat->GetTextureCount(aiTextureType_OPACITY)
+		std::cout << "DISPLACEMENT: " << mat->GetTextureCount(aiTextureType_DISPLACEMENT)
+			<< "x" << std::endl; 
+		std::cout << "HEIGHT: " << mat->GetTextureCount(aiTextureType_HEIGHT)
 			<< "x" << std::endl;
 		std::cout << "UNKNOWN: " << mat->GetTextureCount(aiTextureType_UNKNOWN)
-			<< "x" << std::endl;
+			<< "x" << std::endl; 
 
+		retrieveTextures(mat, aiTextureType_DIFFUSE, targetMesh);
+		retrieveTextures(mat, aiTextureType_SPECULAR, targetMesh);
+		retrieveTextures(mat, aiTextureType_SHININESS, targetMesh);
+		retrieveTextures(mat, aiTextureType_NORMALS, targetMesh);
+		retrieveTextures(mat, aiTextureType_DISPLACEMENT, targetMesh);
+		retrieveTextures(mat, aiTextureType_HEIGHT, targetMesh);
 		
-		std::cout << "converting DIFFUSE textures..." << std::endl;
-		for (int i = 0; i < mat->
-			GetTextureCount(aiTextureType_DIFFUSE); ++i) {
-
-			aiString str;
-			mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-			// convert to relative path if is absolute
-			std::string current(str.C_Str());
-			std::size_t absolute = current.find_last_of('/');
-			if (absolute != std::string::npos) {
-				current = current.substr(absolute + 1);
-			}
-
-			bool found = false;
-			for (int j = 0; j < textures_loaded.size(); ++j) {
-				// found in cache
-				if (std::string(textures_loaded[j]->getPath()) == 
-					directory + current) {
-					std::cout << "found in cache: " << current << std::endl;
-					targetMesh->pushTexture(textures_loaded[j]);
-					found = true;
-					break;
-				}
-			}
-
-			// not found in cache
-			if (!found) {
-				std::cout << "not in cache: "<< current << std::endl;
-				Texture *tex = new Texture((directory + current).c_str(), 
-					TEXTURE_TYPE::DIFFUSE);
-				targetMesh->pushTexture(tex);
-				textures_loaded.push_back(tex);
-			}
-		}
-
-		// TODO: more maps and multiple same maps?
+		// TODO: multiple same maps?
 	}
 
 	return targetMesh;
 }
 
 
+void Model::retrieveTextures(const aiMaterial *mat, const aiTextureType type, Mesh *target)
+{
+	std::cout << "converting textures..." << std::endl;
+
+	for (int i = 0; i < mat->GetTextureCount(type); ++i) {
+
+		aiString str;
+		mat->GetTexture(type, i, &str);
+		// convert to relative path if is absolute
+		std::string current(str.C_Str());
+		std::size_t absolute = current.find_last_of('/');
+		if (absolute != std::string::npos) {
+			current = current.substr(absolute + 1);
+		}
+
+		bool found = false;
+		for (int j = 0; j < textures_loaded.size(); ++j) {
+			// found in cache
+			if (std::string(textures_loaded[j]->getPath()) ==
+				directory + current) {
+				std::cout << "found in cache: " << current << std::endl;
+				target->pushTexture(textures_loaded[j]);
+				found = true;
+				break;
+			}
+		}
+
+		// not found in cache
+		if (!found) {
+			std::cout << "not in cache: " << current << std::endl;
+
+			TEXTURE_TYPE t;
+			if (type == aiTextureType_DIFFUSE)
+				t = TEXTURE_TYPE::DIFFUSE;
+			else if(type == aiTextureType_SPECULAR || type == aiTextureType_SHININESS)
+				t = TEXTURE_TYPE::SPECULAR;
+			else if (type == aiTextureType_NORMALS || type == aiTextureType_DISPLACEMENT
+					|| type == aiTextureType_HEIGHT)
+				t = TEXTURE_TYPE::NORMAL;
+			
+			Texture *tex = new Texture((directory + current).c_str(), t);
+			target->pushTexture(tex);
+			textures_loaded.push_back(tex);
+		}
+	}
+}

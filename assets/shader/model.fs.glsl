@@ -34,6 +34,8 @@ uniform vec3 viewPos;
 // Material stuff
 uniform struct Material {
 
+	vec3 ambientAlbedo;
+
 	bool has_diff_map;
 	sampler2D diffuseMap;
 
@@ -46,8 +48,7 @@ uniform struct Material {
 } material;
 
 
-uniform float ambientStrength = 0.0;
-uniform vec3 ambientAlbedo = vec3(1.0, 1.0, 1.0);
+uniform float ambientStrength = 0.2;
 uniform vec3 default_diffuseAlbedo = vec3(0.2, 0.2, 0.2);
 uniform vec3 default_specularAlbedo = vec3(0.5, 0.5, 0.5);
 uniform int specularPower = 200;
@@ -136,13 +137,18 @@ vec3 view_dir_unit()
 // from object surface, in world space
 vec3 halfway_unit(bool isDirectional)
 {
-	return normalize(-light_dir_unit(isDirectional) + -view_dir_unit());
+	return normalize(-light_dir_unit(isDirectional) + view_dir_unit());
 }
 
 
 /*-------------------------------------*/
 /*	   Helper Blinn-Phong functions	   */
 /*-------------------------------------*/
+
+vec3 ambientAlbedo()
+{
+	return vec3(texture(material.diffuseMap, vertexData.texCoord));
+}
 
 vec3 diffuseAlbedo()
 {
@@ -182,7 +188,7 @@ float specularValue(int type)
 
 vec3 directionalLight()                                  
 {                     
-    vec3 ambient = ambientStrength * ambientAlbedo;
+    vec3 ambient = ambientStrength * ambientAlbedo();
     vec3 diffuse = diffuseValue(0) * diffuseAlbedo();
     vec3 specular = specularValue(0) * specularAlbedo();
 
@@ -194,7 +200,7 @@ vec3 pointLight()
 	float d = length(lightPos - blinnPhongData.fragPos);
 	float fa = min(1 / (1.0 + 0.75 * d + 0.75 * d * d), 1.0); 
 
-    vec3 ambient = ambientStrength * ambientAlbedo;
+    vec3 ambient = ambientStrength * ambientAlbedo();
     vec3 diffuse = diffuseValue(1) * diffuseAlbedo();
     vec3 specular = specularValue(1) * specularAlbedo();
 
@@ -205,7 +211,7 @@ vec3 spotLight()
 {
 	float theta = dot(light_dir_unit(false), normalize(lightDir));
 
-    vec3 ambient = ambientStrength * ambientAlbedo;
+    vec3 ambient = ambientStrength * ambientAlbedo();
 
 	if (theta <= lightOuterCutoff) {
 		return ambient;
