@@ -16,6 +16,19 @@ private:
 	glm::vec2 texture_coordinate;
 };
 
+class VertexPNTS
+{
+public:
+	VertexPNTS(const glm::vec3 &pos, const glm::vec3 &normal,
+		const glm::vec2 &texCoord, const glm::vec3 &tanSpace);
+
+private:
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 texture_coordinate;
+	glm::vec3 tangent_space;
+};
+
 class VertexP2T
 {
 public:

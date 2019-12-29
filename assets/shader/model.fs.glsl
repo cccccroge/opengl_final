@@ -5,6 +5,7 @@ in VertexData
     vec3 position;
     vec3 normal;
     vec2 texCoord;
+	mat3 TBN;
 
 } vertexData;
 
@@ -60,19 +61,6 @@ uniform sampler2D shadowMap;
 layout(location = 0) out vec4 fragColor;
 
 
-vec4 environment_map()
-{
-    // calculate sample direction for skybox
-    vec3 view_dir_unit = normalize(viewPos - blinnPhongData.fragPos);
-    vec3 normal_unit = normalize(blinnPhongData.normal);
-    vec3 sample_dir = reflect(-view_dir_unit, normal_unit);
-
-    // sample color from skybox
-    vec4 col = texture(skybox, sample_dir)/* * vec4(0.95, 0.80, 0.45, 1.0)*/;
-
-    return col;
-}
-
 float shadow_factor(vec4 fragPos)   // light space
 {
     // perspective divide (in case the light camera is perspective)
@@ -116,7 +104,14 @@ float shadow_factor(vec4 fragPos)   // light space
 // from object surface, in world space
 vec3 normal_unit()
 {
-	return normalize(blinnPhongData.normal);
+	if (material.has_norm_map) {
+		vec3 normal = texture(material.normalMap, vertexData.texCoord).xyz;
+		normal = normalize(normal * 2.0 - 1.0);	// color -> spatial
+		normal = normalize(vertexData.TBN * normal);	// tangent space -> world space
+		return normal;
+	}
+	else
+		return normalize(blinnPhongData.normal);
 }
 
 // from light source to object, in world space

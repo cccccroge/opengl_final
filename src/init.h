@@ -16,10 +16,10 @@
 
 #define UP_VECTOR glm::vec3(0.0f, 1.0f, 0.0f)   // Y is up, consistent with OpenGL
     // TODO: mreplace somewhere else code
-#define SCALE_SENSITIVITY 1.25f
-#define PAN_SENSITIVITY 0.05f
-#define FIRST_PERSON_MOVE_SPEED 0.2f
-#define FIRST_PERSON_ROTATE_SPEED 0.4f
+#define SCALE_SENSITIVITY 0.6f
+#define PAN_SENSITIVITY 0.03f
+#define FIRST_PERSON_MOVE_SPEED 0.5f
+#define FIRST_PERSON_ROTATE_SPEED 0.2f
 
 #define COMP_BAR_WIDTH 5.0f
 

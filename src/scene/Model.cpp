@@ -17,7 +17,8 @@ Model::Model(const std::string obj_file,
 {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(obj_file, 
-		aiProcess_Triangulate | aiProcess_GenNormals);
+		aiProcess_Triangulate | aiProcess_GenNormals | 
+		aiProcess_CalcTangentSpace);
 
 	if (!scene || 
 		scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
@@ -74,16 +75,20 @@ Mesh* Model::convertMesh(const aiScene *scene, const aiMesh *mesh)
 	for (int i = 0; i < mesh->mNumVertices; ++i) {
 		aiVector3D &v = mesh->mVertices[i];
 		aiVector3D &n = mesh->mNormals[i];
-		aiVector3D *t = (mesh->mTextureCoords[0]) ? 
+		aiVector3D *tc = (mesh->mTextureCoords[0]) ? 
 			&mesh->mTextureCoords[0][i] : NULL;
+		aiVector3D *ts = (mesh->mTangents) ?	// used in normal mapping
+			&mesh->mTangents[i] : NULL;
 
 		glm::vec3 pos(v.x, v.y, v.z);
 		glm::vec3 normal(n.x, n.y, n.z);
-		glm::vec2 texCoord = t ? 
-			glm::vec2(t->x, t->y) : glm::vec2(0.0f, 0.0f);
+		glm::vec2 texCoord = tc ? 
+			glm::vec2(tc->x, tc->y) : glm::vec2(0.0f, 0.0f);
+		glm::vec3 tanSpace = ts ?
+			glm::vec3(ts->x, ts->y, ts->z) : glm::vec3(0.0f, 0.0f, 0.0f);
 
-		VertexPNT vertex(pos, normal, texCoord);
-		targetMesh->pushVertexPNT(vertex);
+		VertexPNTS vertex(pos, normal, texCoord, tanSpace);
+		targetMesh->pushVertexPNTS(vertex);
 	}
 
 	// retrieve index data

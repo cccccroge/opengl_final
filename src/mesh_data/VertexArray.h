@@ -11,6 +11,7 @@ public:
     VertexArray();
     VertexArray(std::vector<VertexP2T> &vertices);
     VertexArray(std::vector<VertexPNT> &vertices, std::vector<GLuint> &indices);
+	VertexArray(std::vector<VertexPNTS> &vertieces, std::vector<GLuint> &indices);
     VertexArray(std::vector<VertexP> &vertices);
 
     ~VertexArray();

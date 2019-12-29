@@ -19,6 +19,7 @@ public:
     ~Mesh();
 
     inline void pushVertexPNT(VertexPNT v) { verticesPNT.push_back(v); }
+	inline void pushVertexPNTS(VertexPNTS v) { verticesPNTS.push_back(v); }
     inline void pushIndex(GLuint i) { indices.push_back(i); }
     inline void pushTexture(Texture* t) { textures.push_back(t); }
 
@@ -31,6 +32,7 @@ public:
 
 private:
     std::vector<VertexPNT> verticesPNT;
+	std::vector<VertexPNTS> verticesPNTS;
     std::vector<GLuint> indices;
     std::vector<Texture*> textures;
 

@@ -38,7 +38,7 @@ Mesh::~Mesh()
 /* used for assimp loading */
 void Mesh::setUp()
 {
-    vertex_arr = new VertexArray(verticesPNT, indices);
+    vertex_arr = new VertexArray(verticesPNTS, indices);
 }
 
 
@@ -60,8 +60,8 @@ void Mesh::bind(ShaderProgram &program)
 			program.setUniform1i("material.has_spec_map", 1);
 		}
 		else if (textures[i]->getMatType() == TEXTURE_TYPE::NORMAL) {
-			/*textures[i]->bind(program, "material.normalMap", i);
-			program.setUniform1i("material.has_norm_map", 1);*/
+			textures[i]->bind(program, "material.normalMap", i);
+			program.setUniform1i("material.has_norm_map", 1);
 		}
     }
     vertex_arr->bind();
