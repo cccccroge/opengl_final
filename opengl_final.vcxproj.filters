@@ -132,6 +132,9 @@
     <ClInclude Include="src\event\Timer.h">
       <Filter>src\event</Filter>
     </ClInclude>
+    <ClInclude Include="src\scene\Light.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="src\event\Timer.cpp">
       <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Light.cpp">
+      <Filter>src\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

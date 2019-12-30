@@ -49,6 +49,7 @@
     <ClInclude Include="src\render\Shader.h" />
     <ClInclude Include="src\render\ShaderProgram.h" />
     <ClInclude Include="src\scene\Camera.h" />
+    <ClInclude Include="src\scene\Light.h" />
     <ClInclude Include="src\scene\Model.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneObject.h" />
@@ -84,6 +85,7 @@
     <ClCompile Include="src\render\Shader.cpp" />
     <ClCompile Include="src\render\ShaderProgram.cpp" />
     <ClCompile Include="src\scene\Camera.cpp" />
+    <ClCompile Include="src\scene\Light.cpp" />
     <ClCompile Include="src\scene\Model.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneObject.cpp" />
