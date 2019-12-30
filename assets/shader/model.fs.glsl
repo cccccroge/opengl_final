@@ -36,9 +36,9 @@ struct PointLight {
 	vec3 color;
 	float intensity;
 
-	float constantCoeff;
-	float linearCoeff;
-	float quadraticCoeff;
+	float att_constant;
+	float att_linear;
+	float att_quadratic;
 };
 
 struct SpotLight {
@@ -50,9 +50,9 @@ struct SpotLight {
 	vec3 color;
 	float intensity;
 
-	float constantCoeff;
-	float linearCoeff;
-	float quadraticCoeff;
+	float att_constant;
+	float att_linear;
+	float att_quadratic;
 };
 
 uniform DirectionalLight direcitonalLights[3];
@@ -83,7 +83,7 @@ uniform struct Material {
 } material;
 
 
-uniform float ambientStrength = 0.2;
+uniform float ambientStrength = 0.08;
 uniform vec3 default_diffuseAlbedo = vec3(0.2, 0.2, 0.2);
 uniform vec3 default_specularAlbedo = vec3(0.5, 0.5, 0.5);
 uniform int specularPower = 200;
@@ -200,7 +200,8 @@ vec3 oneDirectionalLight(DirectionalLight light)
 		max(dot(normal_unit(), halfway_unit), 0.0), specularPower);
     vec3 specular = specular_value * specularAlbedo();
 
-    return light.color * light.intensity * (ambient + diffuse + specular);
+    return ambient + (light.color * light.intensity) * 
+		(diffuse + specular);
 }                                                                              
                                   
 vec3 onePointLight(PointLight light)
@@ -222,11 +223,11 @@ vec3 onePointLight(PointLight light)
 	// diffuse and specular factor
 	float d = length(light.position - blinnPhongData.fragPos);
 	float factor = min(
-		1 / (light.constantCoeff + light.linearCoeff * d + light.quadraticCoeff * d * d),
+		1 / (light.att_constant + light.att_linear * d + light.att_quadratic * d * d),
 		1.0);
 
-    return light.color * light.intensity * 
-		(ambient + factor * (diffuse + specular));
+    return ambient + (light.color * light.intensity) * 
+		factor * (diffuse + specular);
 } 
 
 vec3 oneSpotLight(SpotLight light)
@@ -262,11 +263,11 @@ vec3 oneSpotLight(SpotLight light)
 
 		float d = length(light.position - blinnPhongData.fragPos);
 		float factor = min(
-			1 / (light.constantCoeff + light.linearCoeff * d + light.quadraticCoeff * d * d),
+			1 / (light.att_constant + light.att_linear * d + light.att_quadratic * d * d),
 			1.0);
 
-		return light.color * light.intensity * 
-			(ambient + stand * factor * (diffuse + specular));
+		return ambient + (light.color * light.intensity) * 
+			stand * factor * (diffuse + specular);
 	}
 }
 

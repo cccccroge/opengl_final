@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream> 
 #include "GLM/trigonometric.hpp"
+#include "../scene/Light.h"
+#include "../scene/DirectionalLight.h"
 
 void setupGui()
 {
@@ -82,13 +84,13 @@ void cameraTool()
 		static int p = 0;
 		if (ImGui::RadioButton("place A", &p, 0)) {
 			global::camViewport.setPos(glm::vec3(3.44579, 11.9493, 3.00064));
-			global::camViewport.setYaw(-114.4);
-			global::camViewport.setPitch(-24.8);
+			global::camViewport.setYaw(-114.4f);
+			global::camViewport.setPitch(-24.8f);
 		}
 		if (ImGui::RadioButton("place B", &p, 1)) {
 			global::camViewport.setPos(glm::vec3(-9.35994, 9.0583, 11.9962));
-			global::camViewport.setYaw(-49.2);
-			global::camViewport.setPitch(-9.99997);
+			global::camViewport.setYaw(-49.2f);
+			global::camViewport.setPitch(-9.99997f);
 		}
 		ImGui::Unindent();
 	ImGui::Separator();
@@ -168,8 +170,10 @@ void weatherTool()
 }
 
 static float pos[3] = { 0, 0, 0 };
-static float pitch = 45;
+static float pitch = 0;
 static float yaw = 0;
+static float intensity = 1.0;
+static float color[3] = { 1.0, 1.0, 1.0 };
 static float cutoff = 15.0;
 static float outerCutoff = 18.0f;
 
@@ -177,8 +181,37 @@ void lightTool()
 {
 	ImGui::Begin("Light tool");
 
-	ImGui::BulletText("Light setting");
+	ImGui::BulletText("Directional light setting");
 		ImGui::Indent();
+
+		if (ImGui::SliderFloat("pitch", &pitch, 0, 180)) {
+			global::sun->setPitch(pitch);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("direcitonalLights[0].direction",
+				global::sun->getDirection());
+		}
+		if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
+			global::sun->setYaw(yaw);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("direcitonalLights[0].direction",
+				global::sun->getDirection());
+		}
+		if (ImGui::SliderFloat("intensity", &intensity, 0.0, 5.0)) {
+			global::sun->setIntensity(intensity);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("direcitonalLights[0].intensity",
+				global::sun->getIntensity());
+		}
+		if (ImGui::ColorEdit3("color", color)) {
+			global::sun->setColor(glm::vec3(color[0], color[1], color[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("direcitonalLights[0].color",
+				global::sun->getColor());
+		}
 
 		/*static int m = 0;
 		if (ImGui::RadioButton("directional light", &m, 0)) {
@@ -233,7 +266,7 @@ void lightTool()
 
 void nextCurvePts()
 {
-	move_progress += (1.0 / CURVE_SAMPLES);
+	move_progress += (float)(1.0 / CURVE_SAMPLES);
 	if (move_progress > 1.0)
 		move_progress = 0;
 

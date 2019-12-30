@@ -18,6 +18,7 @@
 #include "event/timer.h"
 #include "event/gui.h"
 #include "scene/DirectionalLight.h"
+#include "scene/PointLight.h"
 
 #include <iostream>
 
@@ -31,6 +32,7 @@ Texture* global::depthTex;
 Renderer* global::renderer;
 Model* global::Man;
 Skybox* global::skybox;
+DirectionalLight* global::sun;
 Timer* global::travelTimer;
 
 
@@ -89,9 +91,11 @@ void setupRendering()
 		glm::vec3(0.0f, 0.0f, 0.0f), 45.0f, 0.0f, 0);
 
 	// setup lights
-	DirectionalLight* sun = new DirectionalLight(
-		glm::vec3(0, 10, 0), glm::vec3(0.1, -1, 0.1),
-		glm::vec3(1.0, 1.0, 1.0), 0.75);
+	global::sun = new DirectionalLight(
+		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0);
+	PointLight* pointLight = new PointLight(
+		glm::vec3(0, 0, 0), glm::vec3(0.5, 0.5, 1.0), 1.25, 
+		glm::vec3(1, 0.5, 0.5));
 
 	// send to renderer
 	global::renderer = new Renderer();
@@ -99,7 +103,8 @@ void setupRendering()
 	global::renderer->addSkybox(*global::skybox);
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->setLightCamera(global::camLight);
-	global::renderer->addDirectionalLight(*sun);
+	global::renderer->addDirectionalLight(*global::sun);
+	//global::renderer->addPointLight(*pointLight);
 
 	// set up post effect buffer
 	global::postEffectBuffer = new PostEffectBuffer(MAINWINDOW_WIDTH,

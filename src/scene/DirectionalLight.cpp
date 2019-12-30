@@ -1,9 +1,9 @@
 #include "DirectionalLight.h"
 #include <string>
 
-DirectionalLight::DirectionalLight(const glm::vec3 position, const glm::vec3 direction,
+DirectionalLight::DirectionalLight(const glm::vec3 position,
 	const glm::vec3 color, const float intensity) : 
-	Light(position, direction, color, intensity)
+	Light(position, color, intensity)
 {
 
 }

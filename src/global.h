@@ -9,6 +9,7 @@
 #include "render/PostEffectBuffer.h"
 #include "scene/Skybox.h"
 #include "event/Timer.h"
+#include "scene/DirectionalLight.h"
 
 #endif
 
@@ -29,6 +30,7 @@ namespace global
 
     extern Model *Man;
     extern Skybox *skybox;
+    extern DirectionalLight *sun;
 
     extern Camera camViewport;
     extern Camera camLight;

@@ -44,7 +44,12 @@ void Renderer::addModel(Model &model)
 
 void Renderer::addDirectionalLight(DirectionalLight& light)
 {
-	light_vec.push_back(&light);
+	light_vec_dir.push_back(&light);
+}
+
+void Renderer::addPointLight(PointLight& light)
+{
+	light_vec_point.push_back(&light);
 }
 
 void Renderer::addSkybox(Skybox &_skybox)
@@ -120,12 +125,15 @@ void Renderer::DrawModels()
 {
 	global::program_model->bind();
 
-	global::program_model->setUniform1i("NUM_OF_DIRECTIONAL_LIGHT", light_vec.size());
+	global::program_model->setUniform1i("NUM_OF_DIRECTIONAL_LIGHT", light_vec_dir.size());
 	global::program_model->setUniform1i("NUM_OF_POINT_LIGHT", 0);
 	global::program_model->setUniform1i("NUM_OF_SPOT_LIGHT", 0);
 
-	for (int i = 0; i < light_vec.size(); ++i) {
-		light_vec[i]->bind(*global::program_model, i);
+	for (int i = 0; i < light_vec_dir.size(); ++i) {
+		light_vec_dir[i]->bind(*global::program_model, i);
+	}
+	for (int i = 0; i < light_vec_point.size(); ++i) {
+		light_vec_point[i]->bind(*global::program_model, i);
 	}
 
 	for (auto modelPtr : model_vec) {
@@ -140,12 +148,12 @@ void Renderer::DrawModels()
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
-		global::program_model->setUniformMat4("vpMatrixLight", proj_l * view_l);
+		/*global::program_model->setUniformMat4("vpMatrixLight", proj_l * view_l);*/
 
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
-			global::depthTex->bind(*global::program_model,    // use in shadow mapping
-				"shadowMap", 1);
+			//global::depthTex->bind(*global::program_model,    // use in shadow mapping
+			//	"shadowMap", 1);
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
 				GL_UNSIGNED_INT, 0);

@@ -6,8 +6,9 @@
 class DirectionalLight : public Light
 {
 public:
-	DirectionalLight(const glm::vec3 position, const glm::vec3 direction, 
+	DirectionalLight(const glm::vec3 position, 
 		const glm::vec3 color, const float intensity);
 
 	void bind(ShaderProgram& program, int index);
+
 };
