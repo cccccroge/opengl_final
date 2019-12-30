@@ -4,6 +4,7 @@
 #include "../scene/Model.h"
 #include "../scene/Camera.h"
 #include "../scene/Skybox.h"
+#include "../scene/DirectionalLight.h"
 #include <vector>
 
 
@@ -15,6 +16,7 @@ public:
     void setMainCamera(Camera &cam);
     void setLightCamera(Camera &cam);
     void addModel(Model &model);
+    void addDirectionalLight(DirectionalLight& light);
     void addSkybox(Skybox &skybox);
 
     void RenderAll();
@@ -30,6 +32,7 @@ private:
     Camera *main_camera;
     Camera *light_camera;
     std::vector<Model *> model_vec;
+    std::vector<DirectionalLight*> light_vec;
     Skybox *skybox;
 };
 

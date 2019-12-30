@@ -180,7 +180,7 @@ void lightTool()
 	ImGui::BulletText("Light setting");
 		ImGui::Indent();
 
-		static int m = 0;
+		/*static int m = 0;
 		if (ImGui::RadioButton("directional light", &m, 0)) {
 			global::program_model->bind();
 			global::program_model->setUniform1i("lightMode", 0);
@@ -222,7 +222,7 @@ void lightTool()
 		if (ImGui::SliderFloat("outer cufoff angle", &outerCutoff, 0, 180)) {
 			global::program_model->bind();
 			global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(outerCutoff)));
-		}
+		}*/
 
 		ImGui::Unindent();
 

@@ -17,6 +17,7 @@
 #include "render/PostEffectBuffer.h"
 #include "event/timer.h"
 #include "event/gui.h"
+#include "scene/DirectionalLight.h"
 
 #include <iostream>
 
@@ -87,12 +88,18 @@ void setupRendering()
 		std::vector<float>({ 0.1f, 500.0f, -10.0f, 10.0f, -10.0f, 10.0f }), 
 		glm::vec3(0.0f, 0.0f, 0.0f), 45.0f, 0.0f, 0);
 
+	// setup lights
+	DirectionalLight* sun = new DirectionalLight(
+		glm::vec3(0, 10, 0), glm::vec3(0.1, -1, 0.1),
+		glm::vec3(1.0, 1.0, 1.0), 0.75);
+
 	// send to renderer
 	global::renderer = new Renderer();
 	global::renderer->addModel(*global::Man);
 	global::renderer->addSkybox(*global::skybox);
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->setLightCamera(global::camLight);
+	global::renderer->addDirectionalLight(*sun);
 
 	// set up post effect buffer
 	global::postEffectBuffer = new PostEffectBuffer(MAINWINDOW_WIDTH,
@@ -108,16 +115,7 @@ void setupRendering()
 	global::depthMapBuffer->attachEmptyColorBuffer();
 	global::depthMapBuffer->validate();
 
-	// set up uniforms programs
-	global::program_model->bind();
-	global::program_model->setUniform1i("lightMode", 0);	// default: directional light
-	global::program_model->setUniformVec3("lightPos", 
-		global::camLight.getPos());
-	global::program_model->setUniformVec3("lightDir",
-		global::camLight.getDirection('f'));
-	global::program_model->setUniform1f("lightCutoff", cos(glm::radians(15.0f)));
-	global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(18.0f)));
-	
+	// set up uniforms for programs
 	global::program_posteffect->bind();
 	global::program_posteffect->setUniform1f("gamma", 1.3f);
 

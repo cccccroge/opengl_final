@@ -42,6 +42,11 @@ void Renderer::addModel(Model &model)
     model_vec.push_back(&model);
 }
 
+void Renderer::addDirectionalLight(DirectionalLight& light)
+{
+	light_vec.push_back(&light);
+}
+
 void Renderer::addSkybox(Skybox &_skybox)
 {
     skybox = &_skybox;
@@ -114,6 +119,14 @@ void Renderer::DrawDepthMap()
 void Renderer::DrawModels()
 {
 	global::program_model->bind();
+
+	global::program_model->setUniform1i("NUM_OF_DIRECTIONAL_LIGHT", light_vec.size());
+	global::program_model->setUniform1i("NUM_OF_POINT_LIGHT", 0);
+	global::program_model->setUniform1i("NUM_OF_SPOT_LIGHT", 0);
+
+	for (int i = 0; i < light_vec.size(); ++i) {
+		light_vec[i]->bind(*global::program_model, i);
+	}
 
 	for (auto modelPtr : model_vec) {
 		// change uniforms in program

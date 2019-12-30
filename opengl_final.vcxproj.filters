@@ -135,6 +135,15 @@
     <ClInclude Include="src\scene\Light.h">
       <Filter>src\scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\scene\SpotLight.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\PointLight.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\DirectionalLight.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -237,6 +246,15 @@
       <Filter>src\event</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\Light.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\SpotLight.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\PointLight.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\DirectionalLight.cpp">
       <Filter>src\scene</Filter>
     </ClCompile>
   </ItemGroup>
