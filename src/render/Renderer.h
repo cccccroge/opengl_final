@@ -6,6 +6,7 @@
 #include "../scene/Skybox.h"
 #include "../scene/DirectionalLight.h"
 #include "../scene/PointLight.h"
+#include "../scene/SpotLight.h"
 #include <vector>
 
 
@@ -19,6 +20,7 @@ public:
     void addModel(Model &model);
     void addDirectionalLight(DirectionalLight& light);
     void addPointLight(PointLight& light);
+    void addSpotLight(SpotLight& light);
     void addSkybox(Skybox &skybox);
 
     void RenderAll();
@@ -36,6 +38,7 @@ private:
     std::vector<Model *> model_vec;
     std::vector<DirectionalLight *> light_vec_dir;
     std::vector<PointLight *> light_vec_point;
+    std::vector<SpotLight *> light_vec_spot;
     Skybox *skybox;
 };
 

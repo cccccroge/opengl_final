@@ -52,6 +52,11 @@ void Renderer::addPointLight(PointLight& light)
 	light_vec_point.push_back(&light);
 }
 
+void Renderer::addSpotLight(SpotLight& light)
+{
+	light_vec_spot.push_back(&light);
+}
+
 void Renderer::addSkybox(Skybox &_skybox)
 {
     skybox = &_skybox;
@@ -66,6 +71,7 @@ void Renderer::RenderAll()
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+		glEnable(GL_CULL_FACE);	// [start cull front face]
 
 		DrawDepthMap();
 
@@ -81,6 +87,7 @@ void Renderer::RenderAll()
 		DrawModels();
 
 		glDepthMask(GL_FALSE);
+		glDisable(GL_CULL_FACE);	// [end cull front face]
 		DrawSkybox();
 		glDepthMask(GL_TRUE);
 
@@ -126,14 +133,17 @@ void Renderer::DrawModels()
 	global::program_model->bind();
 
 	global::program_model->setUniform1i("NUM_OF_DIRECTIONAL_LIGHT", light_vec_dir.size());
-	global::program_model->setUniform1i("NUM_OF_POINT_LIGHT", 0);
-	global::program_model->setUniform1i("NUM_OF_SPOT_LIGHT", 0);
+	global::program_model->setUniform1i("NUM_OF_POINT_LIGHT", light_vec_point.size());
+	global::program_model->setUniform1i("NUM_OF_SPOT_LIGHT", light_vec_spot.size());
 
 	for (int i = 0; i < light_vec_dir.size(); ++i) {
 		light_vec_dir[i]->bind(*global::program_model, i);
 	}
 	for (int i = 0; i < light_vec_point.size(); ++i) {
 		light_vec_point[i]->bind(*global::program_model, i);
+	}
+	for (int i = 0; i < light_vec_spot.size(); ++i) {
+		light_vec_spot[i]->bind(*global::program_model, i);
 	}
 
 	for (auto modelPtr : model_vec) {

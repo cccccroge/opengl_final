@@ -186,9 +186,6 @@ vec3 specularAlbedo()
 
 vec3 oneDirectionalLight(DirectionalLight light)
 {                
-	// ambient
-    vec3 ambient = ambientStrength * ambientAlbedo();
-
 	// diffuse
 	vec3 light_dir_unit = normalize(light.direction);
 	float diffuse_value = max(dot(normal_unit(), -light_dir_unit), 0.0);
@@ -200,15 +197,11 @@ vec3 oneDirectionalLight(DirectionalLight light)
 		max(dot(normal_unit(), halfway_unit), 0.0), specularPower);
     vec3 specular = specular_value * specularAlbedo();
 
-    return ambient + (light.color * light.intensity) * 
-		(diffuse + specular);
+    return (light.color * light.intensity) * (diffuse + specular);
 }                                                                              
                                   
 vec3 onePointLight(PointLight light)
 {        
-	// ambient
-    vec3 ambient = ambientStrength * ambientAlbedo();
-
 	// diffuse
 	vec3 light_dir_unit = normalize(blinnPhongData.fragPos - light.position);
 	float diffuse_value = max(dot(normal_unit(), -light_dir_unit), 0.0);
@@ -226,8 +219,7 @@ vec3 onePointLight(PointLight light)
 		1 / (light.att_constant + light.att_linear * d + light.att_quadratic * d * d),
 		1.0);
 
-    return ambient + (light.color * light.intensity) * 
-		factor * (diffuse + specular);
+    return (light.color * light.intensity) * factor * (diffuse + specular);
 } 
 
 vec3 oneSpotLight(SpotLight light)
@@ -236,11 +228,9 @@ vec3 oneSpotLight(SpotLight light)
 	vec3 head_to_unit = normalize(light.direction);
 	float theta = dot(light_dir_unit, head_to_unit);
 
-	// ambient
-    vec3 ambient = ambientStrength * ambientAlbedo();
 
 	if (theta <= light.outerCutoff) {
-		return ambient;
+		return vec3(0, 0, 0);
 	}
 	// diffuse & specular
 	else {
@@ -266,14 +256,17 @@ vec3 oneSpotLight(SpotLight light)
 			1 / (light.att_constant + light.att_linear * d + light.att_quadratic * d * d),
 			1.0);
 
-		return ambient + (light.color * light.intensity) * 
-			stand * factor * (diffuse + specular);
+		return (light.color * light.intensity) * stand * factor * (diffuse + specular);
 	}
 }
 
 vec3 blinn_phong()
 {
 	vec3 accum = vec3(0.0, 0.0, 0.0);
+
+	// default ambient
+	vec3 ambient = ambientStrength * ambientAlbedo();
+	accum += ambient;
 
 	// directional lights
 	for (int i = 0; i < NUM_OF_DIRECTIONAL_LIGHT; ++i) {

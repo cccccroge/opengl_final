@@ -29,9 +29,5 @@ void Light::calDirection()
 	default_dir = glm::rotate(default_dir, glm::radians(pitch), glm::vec3(1, 0, 0));
 	default_dir = glm::rotate(default_dir, glm::radians(yaw), glm::vec3(0, 1, 0));
 
-	//direction = glm::vec3(dir_mat[3].x, dir_mat[3].y, dir_mat[3].z);
 	direction = default_dir;
-
-	std::cout << "direction becomes: " + std::to_string(default_dir.x) + ", " +
-		std::to_string(default_dir.y) + ", " + std::to_string(default_dir.z) << std::endl;
 }

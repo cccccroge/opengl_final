@@ -93,7 +93,7 @@ void SceneObject::rotatePivot(float deg, glm::vec3 axis, glm::vec3 pivot)
 {
 	glm::vec3 axis_normalized = glm::normalize(axis);
 
-	glm::vec3 offset = glm::vec3(getModelMat()[3]) - pivot;
+	glm::vec3 offset = getPosition() - pivot;
 	glm::mat4 rotTran = glm::translate(glm::mat4(1.0f), offset);
 	rotTran = glm::rotate(rotTran, glm::radians(deg), axis_normalized);
 	rotTran = glm::translate(rotTran, -offset);

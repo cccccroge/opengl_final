@@ -27,6 +27,7 @@ public:
 
     inline glm::mat4 getOriginal() { return original; }
     inline glm::mat4 getTranslation() { return translation; }
+    inline glm::vec3 getPosition() { return glm::vec3(getModelMat()[3]); }
     inline glm::mat4 getRotation() { return rotation; }
     inline glm::mat4 getScaling() { return scaling; }
     inline SceneObject* getParent() { return parent; }

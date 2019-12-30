@@ -19,6 +19,7 @@
 #include "event/gui.h"
 #include "scene/DirectionalLight.h"
 #include "scene/PointLight.h"
+#include "scene/SpotLight.h"
 
 #include <iostream>
 
@@ -33,6 +34,8 @@ Renderer* global::renderer;
 Model* global::Man;
 Skybox* global::skybox;
 DirectionalLight* global::sun;
+PointLight* global::pointLight;
+SpotLight* global::spotLight;
 Timer* global::travelTimer;
 
 
@@ -93,9 +96,12 @@ void setupRendering()
 	// setup lights
 	global::sun = new DirectionalLight(
 		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0);
-	PointLight* pointLight = new PointLight(
-		glm::vec3(0, 0, 0), glm::vec3(0.5, 0.5, 1.0), 1.25, 
+	global::pointLight = new PointLight(
+		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0, 
 		glm::vec3(1, 0.5, 0.5));
+	global::spotLight = new SpotLight(
+		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0,
+		glm::vec2(30, 35), glm::vec3(1, 0.25, 0.25));
 
 	// send to renderer
 	global::renderer = new Renderer();
@@ -104,7 +110,8 @@ void setupRendering()
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->setLightCamera(global::camLight);
 	global::renderer->addDirectionalLight(*global::sun);
-	//global::renderer->addPointLight(*pointLight);
+	global::renderer->addPointLight(*global::pointLight);
+	global::renderer->addSpotLight(*global::spotLight);
 
 	// set up post effect buffer
 	global::postEffectBuffer = new PostEffectBuffer(MAINWINDOW_WIDTH,
@@ -126,6 +133,8 @@ void setupRendering()
 
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);
+
+	
 }
 
 

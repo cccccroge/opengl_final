@@ -10,6 +10,8 @@
 #include "scene/Skybox.h"
 #include "event/Timer.h"
 #include "scene/DirectionalLight.h"
+#include "scene/PointLight.h"
+#include "scene/SpotLight.h"
 
 #endif
 
@@ -31,6 +33,8 @@ namespace global
     extern Model *Man;
     extern Skybox *skybox;
     extern DirectionalLight *sun;
+    extern PointLight *pointLight;
+    extern SpotLight *spotLight;
 
     extern Camera camViewport;
     extern Camera camLight;

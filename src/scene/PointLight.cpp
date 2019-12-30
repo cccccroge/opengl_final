@@ -24,8 +24,7 @@ void PointLight::bind(ShaderProgram& program, int index)
 	std::string pre = "pointLights[" + i + "].";
 
 	std::string str = pre + "position";
-	glm::vec4 pos = getModelMat()[3];
-	program.setUniformVec3(str.c_str(), glm::vec3(pos.x, pos.y, pos.z));
+	program.setUniformVec3(str.c_str(), getPosition());
 	str = pre + "color";
 	program.setUniformVec3(str.c_str(), color);
 	str = pre + "intensity";

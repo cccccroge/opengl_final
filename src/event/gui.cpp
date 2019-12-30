@@ -169,13 +169,29 @@ void weatherTool()
 
 }
 
-static float pos[3] = { 0, 0, 0 };
-static float pitch = 0;
-static float yaw = 0;
-static float intensity = 1.0;
-static float color[3] = { 1.0, 1.0, 1.0 };
-static float cutoff = 15.0;
-static float outerCutoff = 18.0f;
+static float pitch_dir = 0;
+static float yaw_dir = 0;
+static float color_dir[3] = { 1.0, 1.0, 1.0 };
+static float intensity_dir = 1.0;
+
+static float pos_point[3] = { 0, 0, 0 };
+static float color_point[3] = { 1.0, 1.0, 1.0 };
+static float intensity_point = 1.0;
+static float att_constant_point = 1.0;
+static float att_linear_point = 0.5;
+static float att_quadratic_point = 0.5;
+
+static float pos_spot[3] = { 0, 0, 0 };
+static float pitch_spot = 0;
+static float yaw_spot = 0;
+static float cutoff = 30;
+static float outerCutoff = 35;
+static float color_spot[3] = { 1.0, 1.0, 1.0 };
+static float intensity_spot = 1.0;
+static float att_constant_spot = 1.0;
+static float att_linear_spot = 0.25;
+static float att_quadratic_spot = 0.25;
+
 
 void lightTool()
 {
@@ -184,81 +200,161 @@ void lightTool()
 	ImGui::BulletText("Directional light setting");
 		ImGui::Indent();
 
-		if (ImGui::SliderFloat("pitch", &pitch, 0, 180)) {
-			global::sun->setPitch(pitch);
+		if (ImGui::SliderFloat("pitch##dir", &pitch_dir, 0, 180)) {
+			global::sun->setPitch(pitch_dir);
 
 			global::program_model->bind();
 			global::program_model->setUniformVec3("direcitonalLights[0].direction",
 				global::sun->getDirection());
 		}
-		if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
-			global::sun->setYaw(yaw);
+		if (ImGui::SliderFloat("yaw##dir", &yaw_dir, 0, 360)) {
+			global::sun->setYaw(yaw_dir);
 
 			global::program_model->bind();
 			global::program_model->setUniformVec3("direcitonalLights[0].direction",
 				global::sun->getDirection());
 		}
-		if (ImGui::SliderFloat("intensity", &intensity, 0.0, 5.0)) {
-			global::sun->setIntensity(intensity);
-
-			global::program_model->bind();
-			global::program_model->setUniform1f("direcitonalLights[0].intensity",
-				global::sun->getIntensity());
-		}
-		if (ImGui::ColorEdit3("color", color)) {
-			global::sun->setColor(glm::vec3(color[0], color[1], color[2]));
+		if (ImGui::ColorEdit3("color##dir", color_dir)) {
+			global::sun->setColor(glm::vec3(color_dir[0], color_dir[1], color_dir[2]));
 
 			global::program_model->bind();
 			global::program_model->setUniformVec3("direcitonalLights[0].color",
 				global::sun->getColor());
 		}
-
-		/*static int m = 0;
-		if (ImGui::RadioButton("directional light", &m, 0)) {
-			global::program_model->bind();
-			global::program_model->setUniform1i("lightMode", 0);
-		}
-		if (ImGui::RadioButton("point light", &m, 1)) {
-			global::program_model->bind();
-			global::program_model->setUniform1i("lightMode", 1);
-		}
-		if (ImGui::RadioButton("spot light", &m, 2)) {
-			global::program_model->bind();
-			global::program_model->setUniform1i("lightMode", 2);
-		}
-
-		if (ImGui::SliderFloat3("position", pos, -20, 20)) {
-			global::camLight.setPos(glm::vec3(pos[0], pos[1], pos[2]));
+		if (ImGui::SliderFloat("intensity##dir", &intensity_dir, 0.0, 5.0)) {
+			global::sun->setIntensity(intensity_dir);
 
 			global::program_model->bind();
-			global::program_model->setUniformVec3("lightPos", 
-				global::camLight.getPos());
+			global::program_model->setUniform1f("direcitonalLights[0].intensity",
+				global::sun->getIntensity());
 		}
-		if (ImGui::SliderFloat("pitch", &pitch, -89, 89)) {
-			global::camLight.setPitch(pitch);
-
-			global::program_model->bind();
-			global::program_model->setUniformVec3("lightDir",
-				global::camLight.getDirection('f'));
-		}
-		if (ImGui::SliderFloat("yaw", &yaw, 0, 360)) {
-			global::camLight.setYaw(yaw);
-
-			global::program_model->bind();
-			global::program_model->setUniformVec3("lightDir",
-				global::camLight.getDirection('f'));
-		}
-		if (ImGui::SliderFloat("cufoff angle", &cutoff, 0, 180)) {
-			global::program_model->bind();
-			global::program_model->setUniform1f("lightCutoff", cos(glm::radians(cutoff)));
-		}
-		if (ImGui::SliderFloat("outer cufoff angle", &outerCutoff, 0, 180)) {
-			global::program_model->bind();
-			global::program_model->setUniform1f("lightOuterCutoff", cos(glm::radians(outerCutoff)));
-		}*/
 
 		ImGui::Unindent();
 
+	ImGui::BulletText("Point light setting");
+		ImGui::Indent();
+
+		if (ImGui::SliderFloat3("position##point", pos_point, -20, 20)) {
+			global::pointLight->setTranslation(
+				glm::vec3(pos_point[0], pos_point[1], pos_point[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("pointLights[0].position",
+				global::pointLight->getPosition());
+		}
+		if (ImGui::ColorEdit3("color##point", color_point)) {
+			global::pointLight->setColor(glm::vec3(color_point[0], color_point[1], color_point[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("pointLights[0].color",
+				global::pointLight->getColor());
+		}
+		if (ImGui::SliderFloat("intensity##point", &intensity_point, 0.0, 5.0)) {
+			global::pointLight->setIntensity(intensity_point);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("pointLights[0].intensity",
+				global::pointLight->getIntensity());
+		}
+		if (ImGui::SliderFloat("attenuation(constant)##point", &att_constant_point, 1.0, 2.0)) {
+			global::pointLight->setAttLinear(att_constant_point);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("pointLights[0].att_constant",
+				global::pointLight->getAttConstant());
+		}
+		if (ImGui::SliderFloat("attenuation(linear)##point", &att_linear_point, 0.0, 3.0)) {
+			global::pointLight->setAttLinear(att_linear_point);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("pointLights[0].att_linear",
+				global::pointLight->getAttLinear());
+		}
+		if (ImGui::SliderFloat("attenuation(quadratic)##point", &att_quadratic_point, 0.0, 3.0)) {
+			global::pointLight->setAttQuadratic(att_quadratic_point);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("pointLights[0].att_quadratic",
+				global::pointLight->getAttQuadratic());
+		}
+		ImGui::Unindent();
+
+	ImGui::BulletText("Spot light setting");
+		ImGui::Indent();
+
+		if (ImGui::SliderFloat3("position##spot", pos_spot, -20, 20)) {
+			global::spotLight->setTranslation(
+				glm::vec3(pos_spot[0], pos_spot[1], pos_spot[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("spotLights[0].position",
+				global::spotLight->getPosition());
+		}
+		if (ImGui::SliderFloat("pitch##spot", &pitch_spot, 0, 180)) {
+			global::spotLight->setPitch(pitch_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("spotLights[0].direction",
+				global::spotLight->getDirection());
+		}
+		if (ImGui::SliderFloat("yaw##spot", &yaw_spot, 0, 360)) {
+			global::spotLight->setYaw(yaw_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("spotLights[0].direction",
+				global::spotLight->getDirection());
+		}
+		if (ImGui::SliderFloat("cutoff angle", &cutoff, 0, 180)) {
+			global::spotLight->setCutoff(cutoff);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].cutoff",
+				cos(glm::radians(global::spotLight->getCutoff())));
+		}
+		if (ImGui::SliderFloat("outer cutoff angle", &outerCutoff, 0, 180)) {
+			global::spotLight->setOuterCutoff(outerCutoff);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].outerCutoff",
+				cos(glm::radians(global::spotLight->getCutoff())));
+		}
+		if (ImGui::ColorEdit3("color##spot", color_spot)) {
+			global::spotLight->setColor(glm::vec3(color_spot[0], color_spot[1], color_spot[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("spotLights[0].color",
+				global::spotLight->getColor());
+		}
+		if (ImGui::SliderFloat("intensity##spot", &intensity_spot, 0.0, 5.0)) {
+			global::spotLight->setIntensity(intensity_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].intensity",
+				global::spotLight->getIntensity());
+		}
+		if (ImGui::SliderFloat("attenuation(constant)##spot", &att_constant_spot, 1.0, 2.0)) {
+			global::spotLight->setAttConstant(att_constant_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].att_constant",
+				global::spotLight->getAttConstant());
+		}
+		if (ImGui::SliderFloat("attenuation(linear)##spot", &att_linear_spot, 0.0, 3.0)) {
+			global::spotLight->setAttLinear(att_linear_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].att_linear",
+				global::spotLight->getAttLinear());
+		}
+		if (ImGui::SliderFloat("attenuation(quadratic)##spot", &att_quadratic_spot, 0.0, 3.0)) {
+			global::spotLight->setAttQuadratic(att_quadratic_spot);
+
+			global::program_model->bind();
+			global::program_model->setUniform1f("spotLights[0].att_quadratic",
+				global::spotLight->getAttQuadratic());
+		}
+
+		ImGui::Unindent();
 
 	ImGui::End();
 }
