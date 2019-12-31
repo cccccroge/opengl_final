@@ -30,13 +30,6 @@ void Renderer::setMainCamera(Camera &cam)
     main_camera = &cam;
 }
 
-
-void Renderer::setLightCamera(Camera &cam)
-{
-    light_camera = &cam;
-}
-
-
 void Renderer::addModel(Model &model)
 {
     model_vec.push_back(&model);
@@ -66,7 +59,7 @@ void Renderer::RenderAll()
 {
     // 1.draw depth map
     global::depthMapBuffer->bind();
-    glViewport(0, 0, 1024, 1024);
+    glViewport(0, 0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
@@ -114,9 +107,8 @@ void Renderer::DrawDepthMap()
 	for (auto modelPtr : model_vec) {
 		// change uniforms in program
 		glm::mat4 model = modelPtr->getModelMat();
-		glm::mat4 view = light_camera->getViewMat();
-		glm::mat4 proj = light_camera->getProjMat();
-		global::program_shadow->setUniformMat4("vpMatrixLight", proj * view);
+		glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
+		global::program_shadow->setUniformMat4("vpMatrixLight", lightVP);
 		global::program_shadow->setUniformMat4("mMatrixModel", model);
 
 		// bind mesh and draw
@@ -152,18 +144,17 @@ void Renderer::DrawModels()
 		glm::mat4 view = main_camera->getViewMat();
 		glm::mat4 proj = main_camera->getProjMat();
 		glm::vec3 cameraPos = main_camera->getPos();
-		glm::mat4 view_l = light_camera->getViewMat();
-		glm::mat4 proj_l = light_camera->getProjMat();
+		glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
 
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
-		/*global::program_model->setUniformMat4("vpMatrixLight", proj_l * view_l);*/
+		global::program_model->setUniformMat4("vpMatrixLight", lightVP);
 
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
-			//global::depthTex->bind(*global::program_model,    // use in shadow mapping
-			//	"shadowMap", 1);
+			global::depthTex->bind(*global::program_model,    // use in shadow mapping
+				"shadowMap", 1);
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
 				GL_UNSIGNED_INT, 0);

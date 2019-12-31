@@ -17,6 +17,7 @@ public:
     void setUniformMat4(const char *name, glm::mat4 matrix);
     void setUniform1i(const char *name, GLint val);
     void setUniform1f(const char *name, GLfloat val);
+    void setUniform1d(const char* name, GLdouble val);
     void setUniformVec3(const char *name, glm::vec3 vec);
 
 private:

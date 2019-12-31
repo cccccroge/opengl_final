@@ -9,7 +9,7 @@ public:
 	SpotLight(const glm::vec3 position,
 		const glm::vec3 color, const float intensity,
 		const glm::vec2 cutoff,
-		const glm::vec3 attenuation = glm::vec3(1.0, 0.5, 0.5));
+		const glm::vec3 attenuation, std::vector<float> spectrum);
 
 	void bind(ShaderProgram& program, int index);
 

@@ -46,6 +46,27 @@ CubemapTexture::CubemapTexture(const std::vector<std::string> paths)
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
+/* for depth map of point light */
+CubemapTexture::CubemapTexture(const int width, const int height) : paths()
+{
+    glGenTextures(1, &tbo);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tbo);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    // Define texture usage and allocate memory
+    for (int i = 0; i < 6; ++i) {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+            width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    }
+    
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
 CubemapTexture::~CubemapTexture()
 {
     glDeleteTextures(1, &tbo);

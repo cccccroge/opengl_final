@@ -1,10 +1,11 @@
 #include "SpotLight.h"
+#include "GLM/trigonometric.hpp"
 
 SpotLight::SpotLight(const glm::vec3 position,
 	const glm::vec3 color, const float intensity,
 	const glm::vec2 cutoff,
-	const glm::vec3 attenuation/* = glm::vec3(1.0, 0.5, 0.5)*/) :
-	Light(position, color, intensity),
+	const glm::vec3 attenuation, std::vector<float> spectrum) :
+	Light(position, color, intensity, spectrum),
 	cutoff(cutoff[0]), outerCutoff(cutoff[1]),
 	att_constant(attenuation[0]),
 	att_linear(attenuation[1]),

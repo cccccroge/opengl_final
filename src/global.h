@@ -29,6 +29,8 @@ namespace global
     extern PostEffectBuffer *postEffectBuffer;
     extern FrameBuffer *depthMapBuffer;
     extern Texture* depthTex;
+    extern FrameBuffer *depthMapBufferPoint;
+    extern CubemapTexture *depthTexPoint;
 
     extern Model *Man;
     extern Skybox *skybox;
@@ -37,7 +39,6 @@ namespace global
     extern SpotLight *spotLight;
 
     extern Camera camViewport;
-    extern Camera camLight;
     extern Renderer *renderer;
 
     extern float renderWidth;

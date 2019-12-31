@@ -23,6 +23,8 @@
 
 #define COMP_BAR_WIDTH 5.0f
 
+#define DEPTH_MAP_RESOLUTION 2048
+
 /* --------------------------------------------------------------------
  * initGlutContext
  * Initialize freeGLUT and create a mainwindow as current context.

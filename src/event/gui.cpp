@@ -169,8 +169,18 @@ void weatherTool()
 
 }
 
-static float pitch_dir = 0;
-static float yaw_dir = 0;
+static double bias_base = 0.00005;
+static double bias_base_min = 0.00001;
+static double bias_base_max = 0.00025;
+static double bias_factor = 0.0005;
+static double bias_factor_min = 0.0001;
+static double bias_factor_max = 0.0025;
+
+static float pos_dir[3] = { 35, 20, 3 };
+static float near_dir = 0.1f;
+static float far_dir = 150.0f;
+static float pitch_dir = 45;
+static float yaw_dir = 87;
 static float color_dir[3] = { 1.0, 1.0, 1.0 };
 static float intensity_dir = 1.0;
 
@@ -197,10 +207,47 @@ void lightTool()
 {
 	ImGui::Begin("Light tool");
 
+	ImGui::BulletText("Shadow bias");
+		ImGui::Indent();
+		
+		if (ImGui::DragScalar("base", ImGuiDataType_Double, &bias_base, 0.00001f,
+			&bias_base_min, &bias_base_max)) {
+			global::program_model->bind();
+			global::program_model->setUniform1d("BIAS_BASE", bias_base);
+		}
+		if (ImGui::DragScalar("factor", ImGuiDataType_Double, &bias_factor, 0.0001f,
+			&bias_factor_min, &bias_factor_max)) {
+			global::program_model->bind();
+			global::program_model->setUniform1d("BIAS_FACTOR", bias_factor);
+		}
+
+		ImGui::Unindent();
+
+
 	ImGui::BulletText("Directional light setting");
 		ImGui::Indent();
 
-		if (ImGui::SliderFloat("pitch##dir", &pitch_dir, 0, 180)) {
+		if (ImGui::SliderFloat3("position##dir", pos_dir, -100, 100)) {
+			global::sun->setTranslation(
+				glm::vec3(pos_dir[0], pos_dir[1], pos_dir[2]));
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("direcitonalLights[0].position",
+				global::sun->getPosition());
+		}
+		if (ImGui::SliderFloat("near##dir", &near_dir, 0, 10)) {
+			global::sun->setNear(near_dir);
+
+			global::program_model->bind();
+			global::sun->calLightSpaceMat();
+		}
+		if (ImGui::SliderFloat("far##dir", &far_dir, 0, 1000)) {
+			global::sun->setFar(far_dir);
+
+			global::program_model->bind();
+			global::sun->calLightSpaceMat();
+		}
+		if (ImGui::SliderFloat("pitch##dir", &pitch_dir, 1, 179)) {
 			global::sun->setPitch(pitch_dir);
 
 			global::program_model->bind();

@@ -7,8 +7,8 @@
 
 PointLight::PointLight(const glm::vec3 position,
 	const glm::vec3 color, const float intensity,
-	const glm::vec3 attenuation/* = glm::vec3(1.0, 0.5, 0.5)*/) :
-	Light(position, color, intensity), 
+	const glm::vec3 attenuation, std::vector<float> spectrum) :
+	Light(position, color, intensity, spectrum),
 	att_constant(attenuation[0]),
 	att_linear(attenuation[1]),
 	att_quadratic(attenuation[2])

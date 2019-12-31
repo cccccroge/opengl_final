@@ -27,9 +27,13 @@ ShaderProgram* global::program_model;
 ShaderProgram* global::program_posteffect;
 ShaderProgram* global::program_skybox;
 ShaderProgram* global::program_shadow;
+
 PostEffectBuffer* global::postEffectBuffer;
 FrameBuffer* global::depthMapBuffer;
 Texture* global::depthTex;
+FrameBuffer* global::depthMapBufferPoint;
+CubemapTexture* global::depthTexPoint;
+
 Renderer* global::renderer;
 Model* global::Man;
 Skybox* global::skybox;
@@ -71,8 +75,8 @@ void setupRendering()
 	global::program_shadow->compile();
    
 	// setup models
-	//global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
-	global::Man = new Model("assets/model/monkey/monkey.obj");
+	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
+	//global::Man = new Model("assets/model/monkey/monkey.obj");
 
 	// setup skybox
 	global::skybox = new Skybox({
@@ -87,31 +91,31 @@ void setupRendering()
 
 	// setup camera
 	global::camViewport = Camera(PROJECTION_TYPE::PERSPECTIVE, 	// main camera
-		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(0.0f, 15.0f, 0.0f), 
+		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(0.0f, 10.0f, 0.0f), 
 		0, 0, 80.0f);
-	global::camLight = Camera(PROJECTION_TYPE::ORTHOGONAL,	// light camera to produce depth map
-		std::vector<float>({ 0.1f, 500.0f, -10.0f, 10.0f, -10.0f, 10.0f }), 
-		glm::vec3(0.0f, 0.0f, 0.0f), 45.0f, 0.0f, 0);
+	global::camViewport.setPitch(-45.0f);
 
 	// setup lights
 	global::sun = new DirectionalLight(
-		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0);
-	global::pointLight = new PointLight(
+		glm::vec3(35, 20, 3), glm::vec3(1.0, 1.0, 1.0), 1.0,
+		std::vector<float>( { 0.1f, 150.0f, -10, 10, -10, 10 } ));
+	global::sun->setPitch(45.0f);
+	global::sun->setYaw(87.0f);
+	/*global::pointLight = new PointLight(
 		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0, 
 		glm::vec3(1, 0.5, 0.5));
 	global::spotLight = new SpotLight(
 		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0,
-		glm::vec2(30, 35), glm::vec3(1, 0.25, 0.25));
+		glm::vec2(30, 35), glm::vec3(1, 0.25, 0.25));*/
 
 	// send to renderer
 	global::renderer = new Renderer();
 	global::renderer->addModel(*global::Man);
 	global::renderer->addSkybox(*global::skybox);
 	global::renderer->setMainCamera(global::camViewport);
-	global::renderer->setLightCamera(global::camLight);
 	global::renderer->addDirectionalLight(*global::sun);
-	global::renderer->addPointLight(*global::pointLight);
-	global::renderer->addSpotLight(*global::spotLight);
+	//global::renderer->addPointLight(*global::pointLight);
+	//global::renderer->addSpotLight(*global::spotLight);
 
 	// set up post effect buffer
 	global::postEffectBuffer = new PostEffectBuffer(MAINWINDOW_WIDTH,
@@ -122,14 +126,25 @@ void setupRendering()
 
 	// set up depth map buffer
 	global::depthMapBuffer = new FrameBuffer();
-	global::depthTex = new Texture(0, 1024, 1024);
+	global::depthTex = new Texture(0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 	global::depthMapBuffer->attachTexture(*global::depthTex, GL_DEPTH_ATTACHMENT);
 	global::depthMapBuffer->attachEmptyColorBuffer();
 	global::depthMapBuffer->validate();
 
+	/*global::depthMapBufferPoint = new FrameBuffer();
+	global::depthTexPoint = new CubemapTexture(DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
+	global::depthMapBufferPoint->attachCubemapTexture(
+		*global::depthTexPoint, GL_DEPTH_ATTACHMENT);
+	global::depthMapBufferPoint->attachEmptyColorBuffer();
+	global::depthMapBufferPoint->validate();*/
+
 	// set up uniforms for programs
 	global::program_posteffect->bind();
 	global::program_posteffect->setUniform1f("gamma", 1.3f);
+
+	global::program_model->bind();
+	global::program_model->setUniform1d("BIAS_BASE", 0.00005);
+	global::program_model->setUniform1d("BIAS_FACTOR", 0.0005);
 
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);

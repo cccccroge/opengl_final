@@ -26,6 +26,14 @@ void FrameBuffer::attachTexture(Texture &tex, const GLenum attach_type)
 }
 
 
+void FrameBuffer::attachCubemapTexture(CubemapTexture& tex, const GLenum attach_type)
+{
+    bind();
+    glFramebufferTexture(GL_FRAMEBUFFER, attach_type, tex.getTbo(), 0);
+    unbind();
+}
+
+
 void FrameBuffer::attachRenderBuffer(RenderBuffer &render_buffer)
 {
     bind();

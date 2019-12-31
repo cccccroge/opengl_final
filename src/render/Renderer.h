@@ -34,7 +34,6 @@ public:
 
 private:
     Camera *main_camera;
-    Camera *light_camera;
     std::vector<Model *> model_vec;
     std::vector<DirectionalLight *> light_vec_dir;
     std::vector<PointLight *> light_vec_point;

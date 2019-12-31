@@ -3,6 +3,7 @@
 #include "GLEW/glew.h"
 #include "../init.h"
 #include "../mesh_data/Texture.h"
+#include "../mesh_data/CubemapTexture.h"
 #include "RenderBuffer.h"
 
 
@@ -13,6 +14,7 @@ public:
     ~FrameBuffer();
 
     void attachTexture(Texture &tex, const GLenum attach_type);
+    void attachCubemapTexture(CubemapTexture& tex, const GLenum attach_type);
     void attachRenderBuffer(RenderBuffer &render_buffer);
     void attachEmptyColorBuffer();
     bool validate();
