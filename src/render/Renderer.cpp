@@ -68,6 +68,14 @@ void Renderer::RenderAll()
 
 		DrawDepthMap();
 
+	global::depthMapBufferPoint->bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+		DrawDepthMapPoint();
+		
+
     // 2.draw all models -> skybox
     global::postEffectBuffer->bindFrameBuffer();
     glViewport(0, 0, global::renderWidth, global::renderHeight);
@@ -120,6 +128,33 @@ void Renderer::DrawDepthMap()
 	}
 }
 
+void Renderer::DrawDepthMapPoint()
+{
+	global::program_shadow_point->bind();
+
+	for (auto modelPtr : model_vec) {
+		// change uniforms in program
+		glm::mat4 model = modelPtr->getModelMat();
+		global::program_shadow_point->setUniformMat4("mMatrixModel", model);
+
+		std::vector<glm::mat4> &lightVPs = global::pointLight->getLightSpaceMat();
+		for (int i = 0; i < 6; ++i) {
+			std::string name_str = "vpMatrixLight[" + std::to_string(i) + "]";
+			global::program_shadow_point->setUniformMat4(name_str.c_str(), lightVPs[i]);
+		}
+
+		glm::vec3 pointPos = global::pointLight->getPosition();
+		global::program_shadow_point->setUniformVec3("pointLightPos", pointPos);
+
+		// bind mesh and draw
+		for (auto meshPtr : modelPtr->getMeshes()) {
+			meshPtr->bind();
+			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
+				GL_UNSIGNED_INT, 0);
+		}
+	}
+}
+
 void Renderer::DrawModels()
 {
 	global::program_model->bind();
@@ -145,16 +180,21 @@ void Renderer::DrawModels()
 		glm::mat4 proj = main_camera->getProjMat();
 		glm::vec3 cameraPos = main_camera->getPos();
 		glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
+		float far_plane = global::pointLight->getFarPlane();
 
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
 		global::program_model->setUniformMat4("vpMatrixLight", lightVP);
+		global::program_model->setUniform1f("far_plane", far_plane);
 
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
 			global::depthTex->bind(*global::program_model,    // use in shadow mapping
 				"shadowMap", 1);
+			global::depthTexPoint->bind(*global::program_model,
+				"shadowMapPoint", 2);
+
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
 				GL_UNSIGNED_INT, 0);

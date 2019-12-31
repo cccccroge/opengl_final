@@ -105,6 +105,9 @@
     <None Include="assets\shader\posteffect.vs.glsl" />
     <None Include="assets\shader\shadow.fs.glsl" />
     <None Include="assets\shader\shadow.vs.glsl" />
+    <None Include="assets\shader\shadowPoint.fs.glsl" />
+    <None Include="assets\shader\shadowPoint.gs.glsl" />
+    <None Include="assets\shader\shadowPoint.vs.glsl" />
     <None Include="assets\shader\skybox.fs.glsl" />
     <None Include="assets\shader\skybox.vs.glsl" />
   </ItemGroup>

@@ -36,7 +36,6 @@ void DirectionalLight::bind(ShaderProgram& program, int index)
 
 void DirectionalLight::setTranslation(glm::vec3 trans)
 {
-	//setTranslation(trans);	// does this actually call SceneObject's method?
 	if (parent != NULL) {
 		translation_p = glm::translate(glm::mat4(1.0), trans);
 	}

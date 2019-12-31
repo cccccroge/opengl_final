@@ -25,6 +25,7 @@ namespace global
     extern ShaderProgram *program_posteffect;
     extern ShaderProgram *program_skybox;
     extern ShaderProgram *program_shadow;
+    extern ShaderProgram *program_shadow_point;
 
     extern PostEffectBuffer *postEffectBuffer;
     extern FrameBuffer *depthMapBuffer;

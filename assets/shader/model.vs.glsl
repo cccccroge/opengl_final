@@ -27,7 +27,8 @@ out BlinnPhongData
 
 out ShadowData
 {
-    vec4 fragPos;   // in light space
+    vec4 fragPosLight;   // in light space
+    vec4 fragPosWorld;   // in world space
 
 } shadowData;
 
@@ -48,7 +49,8 @@ void main()
     blinnPhongData.fragPos = vec3(mMatrix * vec4(position, 1.0));
     blinnPhongData.normal = mat3(transpose(inverse(mMatrix))) * normal;
 
-    shadowData.fragPos = vpMatrixLight * vec4(blinnPhongData.fragPos, 1.0);
+    shadowData.fragPosLight = vpMatrixLight * vec4(blinnPhongData.fragPos, 1.0);
+    shadowData.fragPosWorld = mMatrix * vec4(blinnPhongData.fragPos, 1.0);
 
     // calculate vertex position
 	gl_Position = mvpMatrix * vec4(position, 1.0);

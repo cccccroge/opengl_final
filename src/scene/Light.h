@@ -31,6 +31,7 @@ public:
 	inline void setIntensity(float val) { intensity = val; }
 	inline void setColor(glm::vec3 col) { color = col; }
 	inline std::vector<glm::mat4>& getLightSpaceMat() { return lightSpaceMat; }
+	inline float getFarPlane() {  return far_plane; }
 
 protected:
 	glm::vec3 direction;	// get from yaw & pitch

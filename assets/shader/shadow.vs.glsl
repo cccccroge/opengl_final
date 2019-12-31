@@ -8,5 +8,6 @@ uniform mat4 mMatrixModel;
 
 void main()
 {
+    // convert to light space to generate depth map
     gl_Position = vpMatrixLight * mMatrixModel * vec4(position, 1.0);
 }

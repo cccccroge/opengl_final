@@ -18,7 +18,8 @@ in BlinnPhongData
 
 in ShadowData
 {
-    vec4 fragPos;   // in light space
+	vec4 fragPosLight;   // in light space
+	vec4 fragPosWorld;   // in world space
 
 } shadowData;
 
@@ -60,6 +61,8 @@ uniform DirectionalLight direcitonalLights[3];
 uniform PointLight pointLights[50];
 uniform SpotLight spotLights[10];
 
+uniform float far_plane;
+
 uniform int NUM_OF_DIRECTIONAL_LIGHT;
 uniform int NUM_OF_POINT_LIGHT;
 uniform int NUM_OF_SPOT_LIGHT;
@@ -95,6 +98,7 @@ uniform int specularPower = 200;
 // others
 uniform samplerCube skybox;
 uniform sampler2D shadowMap;
+uniform samplerCube shadowMapPoint;
 
 layout(location = 0) out vec4 fragColor;
 
@@ -164,6 +168,38 @@ float shadow_factor(vec4 fragPos, vec3 light_dir_unit)   // light space
 	return shadow_factor;
 }
 
+float shadow_factor_point(vec4 fragPos, vec3 light_pos)   // world space
+{
+	vec3 fragToLight = fragPos.xyz - light_pos;
+	float current_depth = length(fragToLight);
+
+	// outside light spectrum?
+	// ...
+
+	// we should bias less if the face is parallel to the light
+	vec3 light_dir_unit = -fragToLight;
+	double bias = (1 - dot(normal_unit(), -light_dir_unit)) * BIAS_FACTOR + BIAS_BASE;
+
+	float shadow_factor = 0.0;
+	float samples = 4.0;
+	float offset = 0.1;
+	for (float x = -offset; x < offset; x += offset / (samples * 0.5))
+	{
+		for (float y = -offset; y < offset; y += offset / (samples * 0.5))
+		{
+			for (float z = -offset; z < offset; z += offset / (samples * 0.5))
+			{
+				float closest_depth = texture(shadowMapPoint, fragToLight + vec3(x, y, z)).r;
+				closest_depth *= far_plane;
+				if (current_depth - bias > closest_depth)
+					shadow_factor += 1.0;
+			}
+		}
+	}
+	shadow_factor /= (samples * samples * samples);
+
+	return 1.0;
+}
 
 /*-------------------------------------*/
 /*	   Helper Blinn-Phong functions	   */
@@ -211,8 +247,7 @@ vec3 oneDirectionalLight(DirectionalLight light)
 
     vec3 mix = (light.color * light.intensity) * (diffuse + specular);
 	// add shadow
-	//vec3 shadow_light_unit_dir = normalize(blinnPhongData.fragPos - light.position);
-	vec3 add_shadow = mix * (1 - shadow_factor(shadowData.fragPos, light_dir_unit));
+	vec3 add_shadow = mix * (1 - shadow_factor(shadowData.fragPosLight, light_dir_unit));
 
 	return add_shadow;
 }                                                                              
@@ -230,14 +265,18 @@ vec3 onePointLight(PointLight light)
 		max(dot(normal_unit(), halfway_unit), 0.0), specularPower);
     vec3 specular = specular_value * specularAlbedo();
 
-	// diffuse and specular factor
+
 	float d = length(light.position - blinnPhongData.fragPos);
 	float factor = min(
 		1 / (light.att_constant + light.att_linear * d + light.att_quadratic * d * d),
 		1.0);
 
-    return (light.color * light.intensity) * factor * (diffuse + specular);
-} 
+    vec3 mix = (light.color * light.intensity) * factor * (diffuse + specular);
+	// add shadow
+	vec3 add_shadow = mix * (1 - shadow_factor_point(shadowData.fragPosWorld, light.position));
+
+	return add_shadow;
+}
 
 vec3 oneSpotLight(SpotLight light)
 {

@@ -27,6 +27,7 @@ ShaderProgram* global::program_model;
 ShaderProgram* global::program_posteffect;
 ShaderProgram* global::program_skybox;
 ShaderProgram* global::program_shadow;
+ShaderProgram* global::program_shadow_point;
 
 PostEffectBuffer* global::postEffectBuffer;
 FrameBuffer* global::depthMapBuffer;
@@ -73,6 +74,15 @@ void setupRendering()
 	global::program_shadow->addShader(vertexShader_shadow);
 	global::program_shadow->addShader(fragmentShader_shadow);
 	global::program_shadow->compile();
+
+	Shader vertexShader_shadow_point = Shader(GL_VERTEX_SHADER, "assets/shader/shadowPoint.vs.glsl");
+	Shader geometry_shadow_point = Shader(GL_GEOMETRY_SHADER, "assets/shader/shadowPoint.gs.glsl");
+	Shader fragmentShader_shadow_point = Shader(GL_FRAGMENT_SHADER, "assets/shader/shadowPoint.fs.glsl");
+	global::program_shadow_point = new ShaderProgram();
+	global::program_shadow_point->addShader(vertexShader_shadow_point);
+	global::program_shadow_point->addShader(geometry_shadow_point);
+	global::program_shadow_point->addShader(fragmentShader_shadow_point);
+	global::program_shadow_point->compile();
    
 	// setup models
 	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
@@ -101,10 +111,9 @@ void setupRendering()
 		std::vector<float>( { 0.1f, 150.0f, -10, 10, -10, 10 } ));
 	global::sun->setPitch(45.0f);
 	global::sun->setYaw(87.0f);
-	/*global::pointLight = new PointLight(
-		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0, 
-		glm::vec3(1, 0.5, 0.5));
-	global::spotLight = new SpotLight(
+	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 1.0, 1.0),
+		2.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 1.0, 25.0, }));
+	/*global::spotLight = new SpotLight(
 		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0,
 		glm::vec2(30, 35), glm::vec3(1, 0.25, 0.25));*/
 
@@ -114,7 +123,7 @@ void setupRendering()
 	global::renderer->addSkybox(*global::skybox);
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->addDirectionalLight(*global::sun);
-	//global::renderer->addPointLight(*global::pointLight);
+	global::renderer->addPointLight(*global::pointLight);
 	//global::renderer->addSpotLight(*global::spotLight);
 
 	// set up post effect buffer
@@ -131,12 +140,12 @@ void setupRendering()
 	global::depthMapBuffer->attachEmptyColorBuffer();
 	global::depthMapBuffer->validate();
 
-	/*global::depthMapBufferPoint = new FrameBuffer();
+	global::depthMapBufferPoint = new FrameBuffer();
 	global::depthTexPoint = new CubemapTexture(DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 	global::depthMapBufferPoint->attachCubemapTexture(
 		*global::depthTexPoint, GL_DEPTH_ATTACHMENT);
 	global::depthMapBufferPoint->attachEmptyColorBuffer();
-	global::depthMapBufferPoint->validate();*/
+	global::depthMapBufferPoint->validate();
 
 	// set up uniforms for programs
 	global::program_posteffect->bind();

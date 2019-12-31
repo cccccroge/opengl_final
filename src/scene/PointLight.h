@@ -12,6 +12,9 @@ public:
 
 	void bind(ShaderProgram& program, int index);
 
+	void setTranslation(glm::vec3 trans);
+	void calLightSpaceMat();
+
 	inline void setAttConstant(const float val) { att_constant = val; }
 	inline void setAttLinear(const float val) { att_linear = val; }
 	inline void setAttQuadratic(const float val) { att_quadratic = val; }

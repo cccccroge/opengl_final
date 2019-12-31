@@ -16,7 +16,6 @@ public:
     Renderer();
     ~Renderer();
     void setMainCamera(Camera &cam);
-    void setLightCamera(Camera &cam);
     void addModel(Model &model);
     void addDirectionalLight(DirectionalLight& light);
     void addPointLight(PointLight& light);
@@ -25,6 +24,7 @@ public:
 
     void RenderAll();
 	void DrawDepthMap();
+    void DrawDepthMapPoint();
 	void DrawModels();
 	void DrawSkybox();
 	void DrawScreen();

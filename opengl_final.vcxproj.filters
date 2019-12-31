@@ -283,5 +283,14 @@
     <None Include="assets\shader\skybox.vs.glsl">
       <Filter>assets\shader</Filter>
     </None>
+    <None Include="assets\shader\shadowPoint.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\shadowPoint.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\shadowPoint.gs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

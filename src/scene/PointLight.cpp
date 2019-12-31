@@ -1,7 +1,10 @@
 #include "PointLight.h"
 #include <string>
-#define GLM_FORCE_SWIZZLE
 #include "GLM/glm.hpp"
+#include "GLM/ext/matrix_transform.hpp"
+#include "GLM/ext/matrix_clip_space.hpp"
+#include "GLM/gtx/projection.hpp"
+#include "../init.h"
 
 
 
@@ -13,7 +16,7 @@ PointLight::PointLight(const glm::vec3 position,
 	att_linear(attenuation[1]),
 	att_quadratic(attenuation[2])
 {
-
+	calLightSpaceMat();
 }
 
 void PointLight::bind(ShaderProgram& program, int index)
@@ -36,4 +39,46 @@ void PointLight::bind(ShaderProgram& program, int index)
 	program.setUniform1f(str.c_str(), att_linear);
 	str = pre + "att_quadratic";
 	program.setUniform1f(str.c_str(), att_quadratic);
+}
+
+void PointLight::setTranslation(glm::vec3 trans)
+{
+	if (parent != NULL) {
+		translation_p = glm::translate(glm::mat4(1.0), trans);
+	}
+	else {
+		translation = glm::translate(glm::mat4(1.0), trans);
+	}
+	calLightSpaceMat();
+}
+
+void PointLight::calLightSpaceMat()
+{
+	float aspect = DEPTH_MAP_RESOLUTION / DEPTH_MAP_RESOLUTION;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), // has to be 90 degree to fit 6 faces
+		aspect, near_plane, far_plane);
+	glm::vec3 pos = getPosition();
+
+	std::vector<glm::mat4> curMat;
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+	curMat.push_back(shadowProj *
+		glm::lookAt(pos, pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+
+	if (lightSpaceMat.size() == 6) {
+		for (int i = 0; i < 6; ++i) {
+			lightSpaceMat[i] = curMat[i];
+		}
+	}
+	else {
+		lightSpaceMat = curMat;
+	}
 }
