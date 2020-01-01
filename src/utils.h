@@ -14,7 +14,7 @@ void printGLError();
 std::string file2String(const std::string &path);
 char* file2Cstring(const char *path);
 bool isFileExist(const char *path);
-
+float randomFloat(const float min, const float max);
 
 
 inline void exitProgram(void)

@@ -10,6 +10,7 @@
 #include <cstdio>
 //#include <unistd.h>
 #include "global.h"
+#include <stdlib.h>
 
 
 
@@ -133,6 +134,10 @@ bool GlutTimer::enabled = false;
 bool GlutTimer::animated = false;
 unsigned int GlutTimer::interval = 0;
 
+float randomFloat(const float min, const float max)
+{
+	return min + (rand() / (RAND_MAX / (max - min)));
+}
 
 GlutTimer::GlutTimer()
 {

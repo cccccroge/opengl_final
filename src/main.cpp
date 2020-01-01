@@ -107,7 +107,7 @@ void setupRendering()
 		0, 0, 80.0f);
 	global::camViewport.setPitch(-45.0f);
 
-	// setup lights
+	// setup controlable lights
 	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 0.5), 0.5, 
 		15.0, 7.7);
 	global::sun->setPitch(45.0f);
@@ -165,7 +165,29 @@ void setupRendering()
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);
 
-	
+	// add random point lights
+	for (int i = 0; i < 5; ++i) {
+		glm::vec3 pos(randomFloat(-3, 3), randomFloat(0.5, 3), randomFloat(-3, 3));
+		PointLight *light = new PointLight(pos, glm::vec3(1.0, 1.0, 1.0),
+			3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
+		global::renderer->addPointLight(*light);
+	}
+
+	// add random lights
+	for (int i = 0; i < 3; ++i) {
+		glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 10), randomFloat(-3, 3));
+		PointLight *light = new PointLight(pos, glm::vec3(1.0, 0.2, 0.2),
+			3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
+		global::renderer->addPointLight(*light);
+	}
+
+	for (int i = 0; i < 3; ++i) {
+		glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 6), randomFloat(-3, 3));
+		SpotLight *light = new SpotLight(pos, glm::vec3(0.2, 0.2, 1.0),
+			3.0, glm::vec2(30.0, 35.0), glm::vec3(1.0, 0.5, 0.5),
+			std::vector<float>({ 0.1, 25.0, }));
+		global::renderer->addSpotLight(*light);
+	}
 }
 
 
