@@ -8,6 +8,7 @@ layout(location = 3) in vec3 tanSpace;
 uniform mat4 mvpMatrix; // model's mvp
 uniform mat4 mMatrix;   // model's m
 uniform mat4 vpMatrixLight;
+uniform mat4 vpMatrixLightSpot;
 
 out VertexData
 {
@@ -28,6 +29,8 @@ out BlinnPhongData
 out ShadowData
 {
     vec4 fragPosLight;   // in light space
+    vec4 fragPosLightSpot;
+
     vec3 fragPosWorld;   // in world space
 
 } shadowData;
@@ -50,6 +53,7 @@ void main()
     blinnPhongData.normal = mat3(transpose(inverse(mMatrix))) * normal;
 
     shadowData.fragPosLight = vpMatrixLight * vec4(blinnPhongData.fragPos, 1.0);
+    shadowData.fragPosLightSpot = vpMatrixLightSpot * vec4(blinnPhongData.fragPos, 1.0);
     shadowData.fragPosWorld = blinnPhongData.fragPos;
 
     // calculate vertex position

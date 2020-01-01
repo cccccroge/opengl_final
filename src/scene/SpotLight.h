@@ -2,6 +2,8 @@
 
 #include "Light.h"
 #include "GLM/vec3.hpp"
+#include "GLM/ext/matrix_transform.hpp"
+#include "GLM/ext/matrix_clip_space.hpp"
 
 class SpotLight : public Light
 {
@@ -12,6 +14,9 @@ public:
 		const glm::vec3 attenuation, std::vector<float> spectrum);
 
 	void bind(ShaderProgram& program, int index);
+
+	void setTranslation(glm::vec3 trans);
+	void calLightSpaceMat();
 
 	inline void setAttConstant(const float val) { att_constant = val; }
 	inline void setAttLinear(const float val) { att_linear = val; }

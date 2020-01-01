@@ -108,6 +108,8 @@
     <None Include="assets\shader\shadowPoint.fs.glsl" />
     <None Include="assets\shader\shadowPoint.gs.glsl" />
     <None Include="assets\shader\shadowPoint.vs.glsl" />
+    <None Include="assets\shader\shadowSpot.fs .glsl" />
+    <None Include="assets\shader\shadowSpot.vs.glsl" />
     <None Include="assets\shader\skybox.fs.glsl" />
     <None Include="assets\shader\skybox.vs.glsl" />
   </ItemGroup>

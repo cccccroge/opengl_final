@@ -237,15 +237,9 @@ void lightTool()
 		}
 		if (ImGui::SliderFloat("near##dir", &near_dir, 0, 10)) {
 			global::sun->setNear(near_dir);
-
-			global::program_model->bind();
-			global::sun->calLightSpaceMat();
 		}
 		if (ImGui::SliderFloat("far##dir", &far_dir, 0, 1000)) {
 			global::sun->setFar(far_dir);
-
-			global::program_model->bind();
-			global::sun->calLightSpaceMat();
 		}
 		if (ImGui::SliderFloat("pitch##dir", &pitch_dir, 1, 179)) {
 			global::sun->setPitch(pitch_dir);

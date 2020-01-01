@@ -34,6 +34,8 @@ FrameBuffer* global::depthMapBuffer;
 Texture* global::depthTex;
 FrameBuffer* global::depthMapBufferPoint;
 CubemapTexture* global::depthTexPoint;
+FrameBuffer* global::depthMapBufferSpot;
+Texture* global::depthTexSpot;
 
 Renderer* global::renderer;
 Model* global::Man;
@@ -106,15 +108,15 @@ void setupRendering()
 	global::camViewport.setPitch(-45.0f);
 
 	// setup lights
-	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 1.0), 1.0, 
+	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 0.5), 0.5, 
 		15.0, 7.7);
 	global::sun->setPitch(45.0f);
 	global::sun->setYaw(87.0f);
-	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 1.0, 1.0),
-		2.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 1.0, 25.0, }));
-	/*global::spotLight = new SpotLight(
-		glm::vec3(0, 0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0,
-		glm::vec2(30, 35), glm::vec3(1, 0.25, 0.25));*/
+	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 0.5, 0.5),
+		3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
+	global::spotLight = new SpotLight(glm::vec3(1.0, 2.0, 0.0), glm::vec3(0.5, 0.5, 0.5),
+		3.0, glm::vec2(30.0, 35.0), glm::vec3(1.0, 0.5, 0.5), 
+		std::vector<float>({ 0.1, 25.0, }));
 
 	// send to renderer
 	global::renderer = new Renderer();
@@ -123,7 +125,7 @@ void setupRendering()
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->addDirectionalLight(*global::sun);
 	global::renderer->addPointLight(*global::pointLight);
-	//global::renderer->addSpotLight(*global::spotLight);
+	global::renderer->addSpotLight(*global::spotLight);
 
 	// set up post effect buffer
 	global::postEffectBuffer = new PostEffectBuffer(MAINWINDOW_WIDTH,
@@ -145,6 +147,12 @@ void setupRendering()
 		*global::depthTexPoint, GL_DEPTH_ATTACHMENT);
 	global::depthMapBufferPoint->attachEmptyColorBuffer();
 	global::depthMapBufferPoint->validate();
+
+	global::depthMapBufferSpot = new FrameBuffer();
+	global::depthTexSpot = new Texture(0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
+	global::depthMapBufferSpot->attachTexture(*global::depthTexSpot, GL_DEPTH_ATTACHMENT);
+	global::depthMapBufferSpot->attachEmptyColorBuffer();
+	global::depthMapBufferSpot->validate();
 
 	// set up uniforms for programs
 	global::program_posteffect->bind();

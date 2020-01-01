@@ -76,6 +76,16 @@ void Renderer::RenderAll()
 		//glEnable(GL_CULL_FACE);	// [start cull front face]
 
 		DrawDepthMapPoint();
+
+	global::depthMapBufferSpot->bind();
+	glViewport(0, 0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		//glEnable(GL_CULL_FACE);	// [start cull front face]
+
+		DrawDepthMapSpot();
 		
 
     // 2.draw all models -> skybox
@@ -159,6 +169,26 @@ void Renderer::DrawDepthMapPoint()
 	}
 }
 
+void Renderer::DrawDepthMapSpot()
+{
+	global::program_shadow->bind();
+
+	for (auto modelPtr : model_vec) {
+		// change uniforms in program
+		glm::mat4 model = modelPtr->getModelMat();
+		glm::mat4 lightVP = global::spotLight->getLightSpaceMat()[0];
+		global::program_shadow->setUniformMat4("vpMatrixLight", lightVP);
+		global::program_shadow->setUniformMat4("mMatrixModel", model);
+
+		// bind mesh and draw
+		for (auto meshPtr : modelPtr->getMeshes()) {
+			meshPtr->bind();
+			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
+				GL_UNSIGNED_INT, 0);
+		}
+	}
+}
+
 void Renderer::DrawModels()
 {
 	global::program_model->bind();
@@ -184,12 +214,14 @@ void Renderer::DrawModels()
 		glm::mat4 proj = main_camera->getProjMat();
 		glm::vec3 cameraPos = main_camera->getPos();
 		glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
+		glm::mat4 lightVP_spot = global::spotLight->getLightSpaceMat()[0];
 		float far_plane = global::pointLight->getFarPlane();
 
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
 		global::program_model->setUniformMat4("vpMatrixLight", lightVP);
+		global::program_model->setUniformMat4("vpMatrixLightSpot", lightVP_spot);
 		global::program_model->setUniform1f("far_plane", far_plane);
 
 		// bind mesh and draw
@@ -198,6 +230,8 @@ void Renderer::DrawModels()
 				"shadowMap", 3);
 			global::depthTexPoint->bind(*global::program_model,
 				"shadowMapPoint", 4);
+			global::depthTexSpot->bind(*global::program_model,
+				"shadowMapSpot", 5);
 
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),

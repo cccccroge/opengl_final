@@ -32,6 +32,8 @@ namespace global
     extern Texture* depthTex;
     extern FrameBuffer *depthMapBufferPoint;
     extern CubemapTexture *depthTexPoint;
+    extern FrameBuffer* depthMapBufferSpot;
+    extern Texture* depthTexSpot;
 
     extern Model *Man;
     extern Skybox *skybox;

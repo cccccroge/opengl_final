@@ -25,6 +25,7 @@ public:
     void RenderAll();
 	void DrawDepthMap();
     void DrawDepthMapPoint();
+    void DrawDepthMapSpot();
 	void DrawModels();
 	void DrawSkybox();
 	void DrawScreen();
