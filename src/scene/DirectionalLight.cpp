@@ -5,15 +5,19 @@
 #include "../init.h"
 
 
-DirectionalLight::DirectionalLight(const glm::vec3 position,
-	const glm::vec3 color, const float intensity,
-	std::vector<float> spectrum) :
-	Light(position, color, intensity, spectrum)
+DirectionalLight::DirectionalLight(const glm::vec3 color, const float intensity,
+	const float sphere_d,
+	const float front_spectrum_factor) :
+	Light(glm::vec3(0., 0., 0.), color, intensity, 
+	std::vector<float>({ 0., 0., 0. ,0. , 0., 0. })),
+	sphere_d(sphere_d), front_spectrum_factor(front_spectrum_factor)
 {
-	left = spectrum[2];
-	right = spectrum[3];
-	bottom = spectrum[4];
-	top = spectrum[5];
+	near_plane = 0.1f;
+	far_plane = near_plane + front_spectrum_factor * sphere_d;
+	left = -sphere_d;
+	right = sphere_d;
+	bottom = -sphere_d;
+	top = sphere_d;
 	calLightSpaceMat();
 }
 
@@ -47,11 +51,11 @@ void DirectionalLight::setTranslation(glm::vec3 trans)
 
 void DirectionalLight::calLightSpaceMat()
 {
-	glm::vec3 pos = getPosition();
 	glm::vec3 dir = getDirection();
-	glm::vec3 lookto = pos + dir;
+	glm::vec3 desired_pos = -sphere_d * dir;	// make shadow spectrum cover whole scene
+	glm::vec3 lookto = desired_pos + dir;
 
-	glm::mat4 lightV = glm::lookAt(pos, lookto, UP_VECTOR);
+	glm::mat4 lightV = glm::lookAt(desired_pos, lookto, UP_VECTOR);
 	glm::mat4 lightP = glm::ortho(left, right, bottom, top, near_plane, far_plane);
 	glm::mat4 lightSpaceMatrix = lightP * lightV;
 

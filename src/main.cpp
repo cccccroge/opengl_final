@@ -106,9 +106,8 @@ void setupRendering()
 	global::camViewport.setPitch(-45.0f);
 
 	// setup lights
-	global::sun = new DirectionalLight(
-		glm::vec3(35, 20, 3), glm::vec3(1.0, 1.0, 1.0), 1.0,
-		std::vector<float>( { 0.1f, 150.0f, -10, 10, -10, 10 } ));
+	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 1.0), 1.0, 
+		15.0, 7.7);
 	global::sun->setPitch(45.0f);
 	global::sun->setYaw(87.0f);
 	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 1.0, 1.0),
