@@ -19,7 +19,7 @@ in BlinnPhongData
 in ShadowData
 {
 	vec4 fragPosLight;   // in light space
-	vec4 fragPosWorld;   // in world space
+	vec3 fragPosWorld;   // in world space
 
 } shadowData;
 
@@ -168,18 +168,22 @@ float shadow_factor(vec4 fragPos, vec3 light_dir_unit)   // light space
 	return shadow_factor;
 }
 
-float shadow_factor_point(vec4 fragPos, vec3 light_pos)   // world space
+float shadow_factor_point(vec3 fragPos, vec3 light_pos)   // world space
 {
-	vec3 fragToLight = fragPos.xyz - light_pos;
+	vec3 fragToLight = fragPos - light_pos;
 	float current_depth = length(fragToLight);
 
 	// outside light spectrum?
 	// ...
 
 	// we should bias less if the face is parallel to the light
-	vec3 light_dir_unit = -fragToLight;
+	vec3 light_dir_unit = -normalize(fragToLight);
 	double bias = (1 - dot(normal_unit(), -light_dir_unit)) * BIAS_FACTOR + BIAS_BASE;
 
+
+	/*float closest_depth = texture(shadowMapPoint, fragToLight).r;
+	closest_depth *= far_plane;
+	float shadow_factor = (current_depth - bias > closest_depth ? 1.0 : 0.0);*/
 	float shadow_factor = 0.0;
 	float samples = 4.0;
 	float offset = 0.1;
@@ -198,7 +202,7 @@ float shadow_factor_point(vec4 fragPos, vec3 light_pos)   // world space
 	}
 	shadow_factor /= (samples * samples * samples);
 
-	return 1.0;
+	return shadow_factor;
 }
 
 /*-------------------------------------*/

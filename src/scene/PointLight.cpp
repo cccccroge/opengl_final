@@ -54,7 +54,7 @@ void PointLight::setTranslation(glm::vec3 trans)
 
 void PointLight::calLightSpaceMat()
 {
-	float aspect = DEPTH_MAP_RESOLUTION / DEPTH_MAP_RESOLUTION;
+	float aspect = (float)DEPTH_MAP_RESOLUTION / (float)DEPTH_MAP_RESOLUTION;
 	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), // has to be 90 degree to fit 6 faces
 		aspect, near_plane, far_plane);
 	glm::vec3 pos = getPosition();

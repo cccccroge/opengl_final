@@ -58,20 +58,22 @@ void Renderer::addSkybox(Skybox &_skybox)
 void Renderer::RenderAll()
 {
     // 1.draw depth map
-    global::depthMapBuffer->bind();
-    glViewport(0, 0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
+  //  global::depthMapBuffer->bind();
+  //  glViewport(0, 0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		//glEnable(GL_DEPTH_TEST);
+		//glDepthFunc(GL_LESS);
+		//glEnable(GL_CULL_FACE);	// [start cull front face]
+
+		//DrawDepthMap();
+
+	global::depthMapBufferPoint->bind();
+	glViewport(0, 0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);	// [start cull front face]
-
-		DrawDepthMap();
-
-	global::depthMapBufferPoint->bind();
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
 
 		DrawDepthMapPoint();
 		
@@ -144,7 +146,9 @@ void Renderer::DrawDepthMapPoint()
 		}
 
 		glm::vec3 pointPos = global::pointLight->getPosition();
+		float far_plane = global::pointLight->getFarPlane();
 		global::program_shadow_point->setUniformVec3("pointLightPos", pointPos);
+		global::program_shadow_point->setUniform1f("far_plane", far_plane);
 
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
@@ -179,21 +183,21 @@ void Renderer::DrawModels()
 		glm::mat4 view = main_camera->getViewMat();
 		glm::mat4 proj = main_camera->getProjMat();
 		glm::vec3 cameraPos = main_camera->getPos();
-		glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
+		//glm::mat4 lightVP = global::sun->getLightSpaceMat()[0];
 		float far_plane = global::pointLight->getFarPlane();
 
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
-		global::program_model->setUniformMat4("vpMatrixLight", lightVP);
+		//global::program_model->setUniformMat4("vpMatrixLight", lightVP);
 		global::program_model->setUniform1f("far_plane", far_plane);
 
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
-			global::depthTex->bind(*global::program_model,    // use in shadow mapping
-				"shadowMap", 1);
+			//global::depthTex->bind(*global::program_model,    // use in shadow mapping
+			//	"shadowMap", 1);
 			global::depthTexPoint->bind(*global::program_model,
-				"shadowMapPoint", 2);
+				"shadowMapPoint", 3);
 
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
