@@ -87,8 +87,7 @@ void setupRendering()
 	global::program_shadow_point->compile();
    
 	// setup models
-	//global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
-	global::Man = new Model("assets/model/monkey/another.obj");
+	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
 
 	// setup skybox
 	global::skybox = new Skybox({
@@ -109,7 +108,7 @@ void setupRendering()
 
 	// setup controlable lights
 	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 0.5), 0.5, 
-		15.0, 7.7);
+		15.0, 15);
 	global::sun->setPitch(45.0f);
 	global::sun->setYaw(87.0f);
 	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 0.5, 0.5),

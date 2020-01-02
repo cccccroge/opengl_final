@@ -373,17 +373,17 @@ vec3 blinn_phong()
 	accum += ambient;
 
 	// directional lights
-	for (int i = 0; i < NUM_OF_DIRECTIONAL_LIGHT; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		accum += oneDirectionalLight(direcitonalLights[i]);
 	}
 
 	// point lights
-	for (int i = 0; i < NUM_OF_POINT_LIGHT; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		accum += onePointLight(pointLights[i]);
 	}
 
 	// spot lights
-	for (int i = 0; i < NUM_OF_SPOT_LIGHT; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		accum += oneSpotLight(spotLights[i]);
 	}
 
