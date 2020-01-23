@@ -6,6 +6,7 @@ layout(location = 2) in vec2 texCoord;
 layout(location = 3) in vec3 tanSpace;
 
 uniform mat4 mvpMatrix; // model's mvp
+uniform mat4 mvMatrix;	// model's mv
 uniform mat4 mMatrix;   // model's m
 uniform mat4 vpMatrixLight;
 uniform mat4 vpMatrixLightSpot;
@@ -35,6 +36,12 @@ out ShadowData
 
 } shadowData;
 
+out FogData
+{
+	vec4 viewSpace;	// view space position
+
+} fogData;
+
 
 void main()
 {
@@ -55,6 +62,9 @@ void main()
     shadowData.fragPosLight = vpMatrixLight * vec4(blinnPhongData.fragPos, 1.0);
     shadowData.fragPosLightSpot = vpMatrixLightSpot * vec4(blinnPhongData.fragPos, 1.0);
     shadowData.fragPosWorld = blinnPhongData.fragPos;
+
+	fogData.viewSpace = mvMatrix * vec4(position, 1.0);
+
 
     // calculate vertex position
 	gl_Position = mvpMatrix * vec4(position, 1.0);

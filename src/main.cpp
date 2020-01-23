@@ -20,6 +20,7 @@
 #include "scene/DirectionalLight.h"
 #include "scene/PointLight.h"
 #include "scene/SpotLight.h"
+#include "snow_effect/SnowEffectObject.h"
 
 #include <iostream>
 
@@ -40,10 +41,15 @@ Texture* global::depthTexSpot;
 Renderer* global::renderer;
 Model* global::Man;
 Skybox* global::skybox;
+SnowEffectObject* global::snowEffectObj;
+WaterEffectObject* global::waterEffectObj;
+
 DirectionalLight* global::sun;
 PointLight* global::pointLight;
 SpotLight* global::spotLight;
+
 Timer* global::travelTimer;
+Timer* global::fpsTimer;
 
 
 void setupRendering()
@@ -87,39 +93,77 @@ void setupRendering()
 	global::program_shadow_point->compile();
    
 	// setup models
-	global::Man = new Model("assets/model/low_poly_winter_scene/Low Poly Winter Scene.obj");
+	global::Man = new Model("assets/model/main_scene/SFMC_main.obj");
+	global::Man->scale(0.25f, 0.25f, 0.25f);
+	global::Man->translate(glm::vec3(0.0f, -6.99f, 8.18f));
 
+	Model *chicken = new Model("assets/model/objects/chicken/chicken.obj");
+	Model *mouse = new Model("assets/model/objects/mouse/mouses4.obj");
+	/*chicken->translate(glm::vec3(-0.80652, -0.0432, 20.331));
+	chicken->rotate(-137, UP_VECTOR);*/
+
+	Model *monkey_head = new Model("assets/model/objects/monkey_head/monkey_head.obj");
+	Model *giraffe = new Model("assets/model/objects/giraffe/Gazelle_OBJ.obj");
+	Model *vultur = new Model("assets/model/objects/vulture/Tucan_OBJ.obj");
+	Model *file = new Model("assets/model/objects/file/file.obj");
+	Model *goat = new Model("assets/model/objects/goat/goat.obj");
 	// setup skybox
 	global::skybox = new Skybox({
-		"assets/image/cubemap_forest/posx.png",
-		"assets/image/cubemap_forest/negx.png",
-		"assets/image/cubemap_forest/posy.png",
-		"assets/image/cubemap_forest/negy.png",
-		"assets/image/cubemap_forest/posz.png",
-		"assets/image/cubemap_forest/negz.png",
+		"assets/image/cubemap_forest/sky6/posx.png",
+		"assets/image/cubemap_forest/sky6/negx.png",
+		"assets/image/cubemap_forest/sky6/posy.png",
+		"assets/image/cubemap_forest/sky6/negy.png",
+		"assets/image/cubemap_forest/sky6/posz.png",
+		"assets/image/cubemap_forest/sky6/negz.png",
 	});
 	global::skybox->scale(1.0f, 1.0f, -1.0f);	// flip it for godsake!
 
+	// setup snow effect
+	global::snowEffectObj = new SnowEffectObject(glm::vec3(-100, -10, -50), 
+		1.5, glm::vec2(3.0, 3.0), 2.5);
+	global::snowEffectObj->initialize();
+
+	global::waterEffectObj = new WaterEffectObject(glm::vec3(270, -34.0, 420.0), 
+		0.05, 0.1);
+	global::waterEffectObj->initialize();
+
 	// setup camera
 	global::camViewport = Camera(PROJECTION_TYPE::PERSPECTIVE, 	// main camera
-		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(0.0f, 10.0f, 0.0f), 
+		std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(5.78f, 1.49f, 19.83f), 
 		0, 0, 80.0f);
-	global::camViewport.setPitch(-45.0f);
+	global::camViewport.setPitch(-15.4f);
+	global::camViewport.setYaw(-119.0f);
+
+	//global::camViewport = Camera(PROJECTION_TYPE::PERSPECTIVE,			// setting for testing water
+	//	std::vector<float>({ 0.1f, 1000.0f }), glm::vec3(30.0, 30.0, 60.0),
+	//	0, 0, 45.0f);
 
 	// setup controlable lights
-	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 0.5), 0.5, 
-		15.0, 15);
+	global::sun = new DirectionalLight(glm::vec3(1.0, 1.0, 0.5), 1.0, 
+		22.5, 15);
 	global::sun->setPitch(45.0f);
 	global::sun->setYaw(87.0f);
-	global::pointLight = new PointLight(glm::vec3(0.0, 1.0, 0.0), glm::vec3(1.0, 0.5, 0.5),
-		3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
-	global::spotLight = new SpotLight(glm::vec3(1.0, 2.0, 0.0), glm::vec3(0.5, 0.5, 0.5),
-		3.0, glm::vec2(30.0, 35.0), glm::vec3(1.0, 0.5, 0.5), 
+	global::pointLight = new PointLight(glm::vec3(1.592, 7.707, 2.381),
+		glm::vec3(150/255.0, 140 / 255.0, 1.0),
+		5.0, glm::vec3(1, 0.5, 0.2), std::vector<float>({ 0.1, 25.0, }));
+	global::spotLight = new SpotLight(glm::vec3(6.18, 4.45, 5.54),
+		glm::vec3(227 / 255.0, 144 / 255.0, 185 / 255.0),
+		3.0, glm::vec2(20.0, 25.0), glm::vec3(1.0, 0.5, 0.5), 
 		std::vector<float>({ 0.1, 25.0, }));
+	global::spotLight->setPitch(26.0f);
+	global::spotLight->setYaw(7.0f);
 
 	// send to renderer
 	global::renderer = new Renderer();
 	global::renderer->addModel(*global::Man);
+	global::renderer->addModel(*monkey_head);
+	global::renderer->addModel(*chicken);
+	global::renderer->addModel(*mouse);
+	global::renderer->addModel(*giraffe);
+	global::renderer->addModel(*vultur);
+	global::renderer->addModel(*file);
+	global::renderer->addModel(*goat);
+
 	global::renderer->addSkybox(*global::skybox);
 	global::renderer->setMainCamera(global::camViewport);
 	global::renderer->addDirectionalLight(*global::sun);
@@ -160,33 +204,28 @@ void setupRendering()
 	global::program_model->bind();
 	global::program_model->setUniform1d("BIAS_BASE", 0.00005);
 	global::program_model->setUniform1d("BIAS_FACTOR", 0.0005);
+	global::program_model->setUniform1f("fogDensity", 0.03);
+	global::program_model->setUniformVec3("fogColor", 
+		vec3(209 / 255.0, 209 / 255.0, 209 / 255.0));
 
 	// set up navigation travel tool timer
-	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 5, nextCurvePts);
+	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 1, nextCurvePts, 0);
 
-	// add random point lights
-	for (int i = 0; i < 5; ++i) {
-		glm::vec3 pos(randomFloat(-3, 3), randomFloat(0.5, 3), randomFloat(-3, 3));
-		PointLight *light = new PointLight(pos, glm::vec3(1.0, 1.0, 1.0),
-			3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
-		global::renderer->addPointLight(*light);
-	}
+	//// add random lights
+	//for (int i = 0; i < 3; ++i) {
+	//	glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 10), randomFloat(-3, 3));
+	//	PointLight *light = new PointLight(pos, glm::vec3(1.0, 0.2, 0.2),
+	//		3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
+	//	global::renderer->addPointLight(*light);
+	//}
 
-	// add random lights
-	for (int i = 0; i < 3; ++i) {
-		glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 10), randomFloat(-3, 3));
-		PointLight *light = new PointLight(pos, glm::vec3(1.0, 0.2, 0.2),
-			3.0, glm::vec3(1, 0.5, 0.5), std::vector<float>({ 0.1, 25.0, }));
-		global::renderer->addPointLight(*light);
-	}
-
-	for (int i = 0; i < 3; ++i) {
-		glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 6), randomFloat(-3, 3));
-		SpotLight *light = new SpotLight(pos, glm::vec3(0.2, 0.2, 1.0),
-			3.0, glm::vec2(30.0, 35.0), glm::vec3(1.0, 0.5, 0.5),
-			std::vector<float>({ 0.1, 25.0, }));
-		global::renderer->addSpotLight(*light);
-	}
+	//for (int i = 0; i < 3; ++i) {
+	//	glm::vec3 pos(randomFloat(-3, 3), randomFloat(3, 6), randomFloat(-3, 3));
+	//	SpotLight *light = new SpotLight(pos, glm::vec3(0.2, 0.2, 1.0),
+	//		3.0, glm::vec2(30.0, 35.0), glm::vec3(1.0, 0.5, 0.5),
+	//		std::vector<float>({ 0.1, 25.0, }));
+	//	global::renderer->addSpotLight(*light);
+	//}
 }
 
 

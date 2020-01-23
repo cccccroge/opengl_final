@@ -25,6 +25,18 @@
     <Filter Include="assets\shader">
       <UniqueIdentifier>{6f3fa2a0-8be2-4c2a-9cb0-7822b25472f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\snow_effect">
+      <UniqueIdentifier>{cf8296e3-8a92-4b4e-865d-0f2a54fab49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\shader\snow_effect">
+      <UniqueIdentifier>{b274f149-c541-471f-89f6-ff424853f976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\water_effect">
+      <UniqueIdentifier>{9ce2ec7c-c4aa-4e12-b267-3a87b7d7e35e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\shader\water_effect">
+      <UniqueIdentifier>{f8f28789-99f2-49bc-8588-16c5747547e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\global.h">
@@ -144,6 +156,33 @@
     <ClInclude Include="src\scene\DirectionalLight.h">
       <Filter>src\scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\snow_effect\Accumulation.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\Deformation.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\GroundPlane.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\MeshSnow.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\ModelSnow.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\ShaderSnow.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\snow_effect\SnowEffectObject.h">
+      <Filter>src\snow_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\water_effect\WaterEffectObject.h">
+      <Filter>src\water_effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\water_effect\wave.h">
+      <Filter>src\water_effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\global.cpp">
@@ -257,6 +296,30 @@
     <ClCompile Include="src\scene\DirectionalLight.cpp">
       <Filter>src\scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\snow_effect\Accumulation.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\snow_effect\Deformation.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\snow_effect\GroundPlane.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\snow_effect\MeshSnow.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\snow_effect\ModelSnow.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\snow_effect\SnowEffectObject.cpp">
+      <Filter>src\snow_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\water_effect\WaterEffectObject.cpp">
+      <Filter>src\water_effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\water_effect\wave.cpp">
+      <Filter>src\water_effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shader\model.fs.glsl">
@@ -297,6 +360,36 @@
     </None>
     <None Include="assets\shader\shadowSpot.vs.glsl">
       <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\HeightFragmentShader.fragmentshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\HeightVertexShader.vertexshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\InstancedFragShader.fragmentshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\InstancedVertShader.vertexshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\SimpleFragmentShader.fragmentshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\SimpleVertexShader.vertexshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\TexturedFragShader.fragmentshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\snow_effect\TexturedVertShader.vertexshader">
+      <Filter>assets\shader\snow_effect</Filter>
+    </None>
+    <None Include="assets\shader\water_effect\surface.frag">
+      <Filter>assets\shader\water_effect</Filter>
+    </None>
+    <None Include="assets\shader\water_effect\surface.vert">
+      <Filter>assets\shader\water_effect</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -23,7 +23,12 @@
 
 #define COMP_BAR_WIDTH 5.0f
 
-#define DEPTH_MAP_RESOLUTION 2048
+#define DEPTH_MAP_RESOLUTION 4096
+
+#define FPS_TIMER_INTERVAL 0.33	// in msec
+#define NUMSNOWFLAKES 2047
+#define kBoundsHeight 201
+#define kBoundsWidth 500
 
 /* --------------------------------------------------------------------
  * initGlutContext

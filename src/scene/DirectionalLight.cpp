@@ -14,10 +14,10 @@ DirectionalLight::DirectionalLight(const glm::vec3 color, const float intensity,
 {
 	near_plane = 0.1f;
 	far_plane = near_plane + front_spectrum_factor * sphere_d;
-	left = -sphere_d;
-	right = sphere_d;
-	bottom = -sphere_d;
-	top = sphere_d;
+	left = -1.3 * sphere_d;
+	right = 1.3 * sphere_d;
+	bottom = -1.3 * sphere_d;
+	top = 1.3 * sphere_d;
 	calLightSpaceMat();
 }
 

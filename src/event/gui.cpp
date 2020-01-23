@@ -26,7 +26,7 @@ void mainMenu()
 		if (ImGui::BeginMenu("Application"))
 		{
 			if (ImGui::MenuItem("Toggle FPS")) {
-				//TODO: FPS code
+				show_fps = !show_fps;
 			}
 
 			if (ImGui::MenuItem("Reset to default")) {
@@ -57,6 +57,16 @@ void mainMenu()
 
 		ImGui::EndMainMenuBar();
 	}
+
+	if (show_fps) {
+		ImGui::SetNextWindowBgAlpha(1);
+		ImGui::Begin("FPS");
+
+		std::string fpsStr = std::to_string(global::current_fps);
+		ImGui::Text(fpsStr.c_str());
+
+		ImGui::End();
+	}
 }
 
 static float fov = 80.0f;
@@ -82,16 +92,32 @@ void cameraTool()
 	ImGui::BulletText("Static mode");
 		ImGui::Indent();
 		static int p = 0;
-		if (ImGui::RadioButton("place A", &p, 0)) {
-			global::camViewport.setPos(glm::vec3(3.44579, 11.9493, 3.00064));
-			global::camViewport.setYaw(-114.4f);
-			global::camViewport.setPitch(-24.8f);
+		if (ImGui::RadioButton("Monkey Head", &p, 0)) {
+			global::camViewport.setPos(glm::vec3(1.405, 6.92, 2.97));
+			global::camViewport.setYaw(-88.0f);
+			global::camViewport.setPitch(-46.6f);
 		}
-		if (ImGui::RadioButton("place B", &p, 1)) {
-			global::camViewport.setPos(glm::vec3(-9.35994, 9.0583, 11.9962));
-			global::camViewport.setYaw(-49.2f);
-			global::camViewport.setPitch(-9.99997f);
+		if (ImGui::RadioButton("King", &p, 1)) {
+			global::camViewport.setPos(glm::vec3(6.74, 3.95, 5.64));
+			global::camViewport.setYaw(-172.6f);
+			global::camViewport.setPitch(-2.2f);
 		}
+		if (ImGui::RadioButton("Cabin", &p, 2)) {
+			global::camViewport.setPos(glm::vec3(-14.0802, -1.5759, 27.8747));
+			global::camViewport.setYaw(-332.4);
+			global::camViewport.setPitch(-1.6);
+		}
+		if (ImGui::RadioButton("Island", &p, 3)) {
+			global::camViewport.setPos(glm::vec3(39.2144, -2.09475, 18.87987));
+			global::camViewport.setYaw(-168.8);
+			global::camViewport.setPitch(14.2);
+		}
+		if (ImGui::RadioButton("Mouse Family", &p, 4)) {
+			global::camViewport.setPos(glm::vec3(17.2529, -0.39504, 17.3588));
+			global::camViewport.setYaw(-162.6);
+			global::camViewport.setPitch(6.0);
+		}
+
 		ImGui::Unindent();
 	ImGui::Separator();
 
@@ -164,9 +190,73 @@ void cameraTool()
 	ImGui::End();
 }
 
+
+static bool check = true;
+static bool check2 = true;
+bool snow_effect_enable = true;
+bool ocean_effect_enable = true;
+static float gravity = 1.5;
+static float density = 2.5;
+static float wind_speed[2] = { 3., 3. };
+
+static float color_fog[3] = { 209 / 255.0, 209 / 255.0, 209 / 255.0 };
+static float density_fog = 0.03;
+
+static float water_pos[3] = { 0., 0., 0. };
+
 void weatherTool()
 {
+	ImGui::Begin("Weather tool");
 
+	ImGui::BulletText("Snow particles");
+		ImGui::Indent();
+
+		if (ImGui::Checkbox("enable", &check)) {
+			snow_effect_enable = !snow_effect_enable;
+		}
+
+		if (ImGui::SliderFloat("gravity", &gravity, 0.1, 10)) {
+			global::snowEffectObj->setGravity(gravity);
+		}
+		if (ImGui::SliderFloat("density", &density, 1, 3)) {
+			global::snowEffectObj->setDensity(density);
+		}
+		if (ImGui::SliderFloat2("wind speed(x, z)", wind_speed, -10, 10)) {
+			global::snowEffectObj->setWindSpeed(
+				glm::vec2(wind_speed[0], wind_speed[1]));
+		}
+
+		ImGui::Unindent();
+
+	ImGui::BulletText("Fog");
+		ImGui::Indent();
+
+		if (ImGui::ColorEdit3("color##fog", color_fog)) {
+			glm::vec3 fogColor = glm::vec3(color_fog[0], color_fog[1], color_fog[2]);
+
+			global::program_model->bind();
+			global::program_model->setUniformVec3("fogColor", fogColor);
+		}
+		if (ImGui::SliderFloat("density##fog", &density_fog, 0.005, 0.1)) {
+			global::program_model->bind();
+			global::program_model->setUniform1f("fogDensity", density_fog);
+
+			global::waterEffectObj->program_ocean->setUniform1f("fogDensity", density_fog);
+		}
+		ImGui::Unindent();
+
+
+	ImGui::BulletText("Ocean");
+		ImGui::Indent();
+
+		if (ImGui::Checkbox("enable##ocean", &check2)) {
+			ocean_effect_enable = !ocean_effect_enable;
+		}
+
+		ImGui::Unindent();
+
+
+	ImGui::End();
 }
 
 static double bias_base = 0.00005;
@@ -181,22 +271,22 @@ static float near_dir = 0.1f;
 static float far_dir = 150.0f;
 static float pitch_dir = 45;
 static float yaw_dir = 87;
-static float color_dir[3] = { 1.0, 1.0, 1.0 };
-static float intensity_dir = 1.0;
+static float color_dir[3] = { 240/255.0, 228/255.0, 199/255.0 };
+static float intensity_dir = 1;
 
-static float pos_point[3] = { 0, 0, 0 };
-static float color_point[3] = { 1.0, 1.0, 1.0 };
-static float intensity_point = 1.0;
+static float pos_point[3] = { 1.592, 7.707, 2.381 };
+static float color_point[3] = { 150 / 255.0, 140 / 255.0, 1.0 };
+static float intensity_point = 5.0;
 static float att_constant_point = 1.0;
 static float att_linear_point = 0.5;
-static float att_quadratic_point = 0.5;
+static float att_quadratic_point = 0.2;
 
-static float pos_spot[3] = { 0, 0, 0 };
-static float pitch_spot = 0;
-static float yaw_spot = 0;
-static float cutoff = 30;
-static float outerCutoff = 35;
-static float color_spot[3] = { 1.0, 1.0, 1.0 };
+static float pos_spot[3] = { 6.18, 4.45, 5.54 };
+static float pitch_spot = 26;
+static float yaw_spot = 7;
+static float cutoff = 20;
+static float outerCutoff = 25;
+static float color_spot[3] = { 227 / 255.0, 144 / 255.0, 185 / 255.0 };
 static float intensity_spot = 1.0;
 static float att_constant_spot = 1.0;
 static float att_linear_spot = 0.25;
@@ -268,6 +358,9 @@ void lightTool()
 			global::program_model->bind();
 			global::program_model->setUniform1f("direcitonalLights[0].intensity",
 				global::sun->getIntensity());
+
+			global::waterEffectObj->program_ocean->bind();
+			global::waterEffectObj->program_ocean->setUniform1f("sunIntensity", global::sun->getIntensity());
 		}
 
 		ImGui::Unindent();
@@ -275,7 +368,7 @@ void lightTool()
 	ImGui::BulletText("Point light setting");
 		ImGui::Indent();
 
-		if (ImGui::SliderFloat3("position##point", pos_point, -20, 20)) {
+		if (ImGui::SliderFloat3("position##point", pos_point, -10, 10)) {
 			global::pointLight->setTranslation(
 				glm::vec3(pos_point[0], pos_point[1], pos_point[2]));
 
@@ -290,7 +383,7 @@ void lightTool()
 			global::program_model->setUniformVec3("pointLights[0].color",
 				global::pointLight->getColor());
 		}
-		if (ImGui::SliderFloat("intensity##point", &intensity_point, 0.0, 5.0)) {
+		if (ImGui::SliderFloat("intensity##point", &intensity_point, 0.0, 10.0)) {
 			global::pointLight->setIntensity(intensity_point);
 
 			global::program_model->bind();
@@ -323,7 +416,7 @@ void lightTool()
 	ImGui::BulletText("Spot light setting");
 		ImGui::Indent();
 
-		if (ImGui::SliderFloat3("position##spot", pos_spot, -20, 20)) {
+		if (ImGui::SliderFloat3("position##spot", pos_spot, 0, 15)) {
 			global::spotLight->setTranslation(
 				glm::vec3(pos_spot[0], pos_spot[1], pos_spot[2]));
 
@@ -331,7 +424,7 @@ void lightTool()
 			global::program_model->setUniformVec3("spotLights[0].position",
 				global::spotLight->getPosition());
 		}
-		if (ImGui::SliderFloat("pitch##spot", &pitch_spot, 0, 180)) {
+		if (ImGui::SliderFloat("pitch##spot", &pitch_spot, 1, 179)) {
 			global::spotLight->setPitch(pitch_spot);
 
 			global::program_model->bind();
@@ -414,4 +507,10 @@ void nextCurvePts()
 	glm::vec3 current_pos = pts[current_i];
 
 	global::camViewport.setPos(current_pos);
+}
+
+
+void calTime()
+{
+	currentTime = currentTime + 20;
 }

@@ -7,6 +7,11 @@
 #include "../global.h"
 #include "../event/gui.h"
 #include <iostream>
+#include "../snow_effect/SnowEffectObject.h"
+
+
+extern bool snow_effect_enable;
+extern bool ocean_effect_enable;
 
 Renderer::Renderer() : main_camera(NULL)
 {
@@ -88,7 +93,7 @@ void Renderer::RenderAll()
 		DrawDepthMapSpot();
 		
 
-    // 2.draw all models -> skybox
+    // 2.draw all models -> snow -> skybox
     global::postEffectBuffer->bindFrameBuffer();
     glViewport(0, 0, global::renderWidth, global::renderHeight);
 
@@ -99,8 +104,15 @@ void Renderer::RenderAll()
 		glDepthFunc(GL_LEQUAL);
 		DrawModels();
 
-		glDepthMask(GL_FALSE);
+		if (snow_effect_enable)
+			global::snowEffectObj->draw();
+
 		glDisable(GL_CULL_FACE);	// [end cull front face]
+		if (ocean_effect_enable)
+			global::waterEffectObj->draw();
+
+		glDepthMask(GL_FALSE);
+		
 		DrawSkybox();
 		glDepthMask(GL_TRUE);
 
@@ -118,6 +130,7 @@ void Renderer::RenderAll()
 
     // 5.Finish all draw calls, now flip swap buffer
     glutSwapBuffers();
+	glutPostRedisplay();
 }
 
 void Renderer::DrawDepthMap()
@@ -218,6 +231,7 @@ void Renderer::DrawModels()
 		float far_plane = global::pointLight->getFarPlane();
 
 		global::program_model->setUniformMat4("mvpMatrix", proj * view * model);
+		global::program_model->setUniformMat4("mvMatrix", view * model);
 		global::program_model->setUniformMat4("mMatrix", model);
 		global::program_model->setUniformVec3("viewPos", cameraPos);
 		global::program_model->setUniformMat4("vpMatrixLight", lightVP);

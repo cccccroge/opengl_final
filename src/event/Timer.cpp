@@ -4,13 +4,20 @@
 #include "../global.h"
 
 
-static void callback_trampoline(int val) 
-	{ global::travelTimer->expire(val); }
+static void callback_trampoline(int id) 
+{ 
+	if (id == 0) {
+		global::travelTimer->expire(id); 
+	}
+	else if (id == 1) {
+		global::fpsTimer->expire(id);
+	}
+}
 
 
 Timer::Timer(const TIMER_TYPE type, const float msec,
-	TIMER_CALLBACK func/* = NULL*/) : type(type), interval(msec),
-	callback(func), enable(false)
+	TIMER_CALLBACK func, const int id) : type(type), interval(msec),
+	callback(func), enable(false), id(id)
 {
 
 }
@@ -24,7 +31,7 @@ void Timer::start()
 {
 	std::cout << "timer start" << std::endl;
 
-	glutTimerFunc(interval, callback_trampoline, 0);
+	glutTimerFunc(interval, callback_trampoline, id);
 	enable = true;
 }
 
@@ -48,7 +55,7 @@ void Timer::expire(int val)
 			enable = false;
 		}
 		else if (type == TIMER_TYPE::REPEAT) {
-			glutTimerFunc(interval, callback_trampoline, 0);
+			glutTimerFunc(interval, callback_trampoline, id);
 		}
 	}
 }

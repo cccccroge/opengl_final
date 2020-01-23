@@ -13,7 +13,7 @@ class Timer {
 
 public:
 	Timer(const TIMER_TYPE type, const float msec, 
-		TIMER_CALLBACK func = NULL);
+		TIMER_CALLBACK func, const int id);	// index should be unique
 	~Timer();
 
 	void start();
@@ -26,6 +26,7 @@ private:
 	TIMER_TYPE type;
 	TIMER_CALLBACK callback;
 	float interval;	// in msec
+	int id;
 
 private:
 	bool enable;

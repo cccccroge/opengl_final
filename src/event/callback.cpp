@@ -55,6 +55,8 @@ void onMenuTriggered(int id)
 
 void onDisplayRefresh(void)
 {
+	global::current_fps = calcFPS(FPS_TIMER_INTERVAL);
+
 	global::renderer->RenderAll();
 }
 

@@ -12,6 +12,8 @@
 #include "scene/DirectionalLight.h"
 #include "scene/PointLight.h"
 #include "scene/SpotLight.h"
+#include "snow_effect/SnowEffectObject.h"
+#include "water_effect/WaterEffectObject.h"
 
 #endif
 
@@ -21,6 +23,7 @@ namespace global
 {
     extern GlutTimer timer;
     extern Timer *travelTimer;
+	extern Timer *fpsTimer;
     extern ShaderProgram *program_model;
     extern ShaderProgram *program_posteffect;
     extern ShaderProgram *program_skybox;
@@ -40,6 +43,8 @@ namespace global
     extern DirectionalLight *sun;
     extern PointLight *pointLight;
     extern SpotLight *spotLight;
+    extern SnowEffectObject *snowEffectObj;
+	extern WaterEffectObject* waterEffectObj;
 
     extern Camera camViewport;
     extern Renderer *renderer;
@@ -48,5 +53,6 @@ namespace global
     extern float renderHeight;
 
     extern float comp_bar_xCoord;
+	extern double current_fps;
 }
 

@@ -25,6 +25,12 @@ in ShadowData
 
 } shadowData;
 
+in FogData
+{
+	vec4 viewSpace;	// view space position
+
+} fogData;
+
 // Lights
 struct DirectionalLight {
 	vec3 position;
@@ -102,6 +108,8 @@ uniform samplerCube skybox;
 uniform sampler2D shadowMap;
 uniform samplerCube shadowMapPoint;
 uniform sampler2D shadowMapSpot;
+uniform float fogDensity;
+uniform vec3 fogColor;
 
 layout(location = 0) out vec4 fragColor;
 
@@ -127,6 +135,18 @@ vec3 normal_unit()
 vec3 view_dir_unit()
 {
 	return normalize(viewPos - blinnPhongData.fragPos);
+}
+
+
+float fog_factor()
+{
+	float dist = length(fogData.viewSpace);
+
+	float factor = 1.0 / exp(dist * fogDensity);
+	factor = clamp(factor, 0.0, 1.0);
+
+
+	return factor;
 }
 
 
@@ -373,17 +393,17 @@ vec3 blinn_phong()
 	accum += ambient;
 
 	// directional lights
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < NUM_OF_DIRECTIONAL_LIGHT; ++i) {
 		accum += oneDirectionalLight(direcitonalLights[i]);
 	}
 
 	// point lights
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < NUM_OF_POINT_LIGHT; ++i) {
 		accum += onePointLight(pointLights[i]);
 	}
 
 	// spot lights
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < NUM_OF_SPOT_LIGHT; ++i) {
 		accum += oneSpotLight(spotLights[i]);
 	}
 
@@ -393,5 +413,12 @@ vec3 blinn_phong()
 void main()
 {
     vec3 blinn_phong_col = blinn_phong();
-	fragColor = vec4(blinn_phong_col, 1.0);
+
+	vec3 sun_fog = fogColor;
+	if (direcitonalLights[0].intensity < 1.0)
+		sun_fog = sun_fog * direcitonalLights[0].intensity;
+
+	vec3 fog = mix(sun_fog, blinn_phong_col, fog_factor());
+
+	fragColor = vec4(fog, 1.0);
 }

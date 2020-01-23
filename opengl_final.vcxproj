@@ -57,7 +57,16 @@
     <ClInclude Include="src\scene\SceneObject.h" />
     <ClInclude Include="src\scene\Skybox.h" />
     <ClInclude Include="src\scene\SpotLight.h" />
+    <ClInclude Include="src\snow_effect\Accumulation.h" />
+    <ClInclude Include="src\snow_effect\Deformation.h" />
+    <ClInclude Include="src\snow_effect\GroundPlane.h" />
+    <ClInclude Include="src\snow_effect\MeshSnow.h" />
+    <ClInclude Include="src\snow_effect\ModelSnow.h" />
+    <ClInclude Include="src\snow_effect\ShaderSnow.h" />
+    <ClInclude Include="src\snow_effect\SnowEffectObject.h" />
     <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\water_effect\WaterEffectObject.h" />
+    <ClInclude Include="src\water_effect\wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\windows\imGui\imgui.cpp" />
@@ -96,7 +105,15 @@
     <ClCompile Include="src\scene\SceneObject.cpp" />
     <ClCompile Include="src\scene\Skybox.cpp" />
     <ClCompile Include="src\scene\SpotLight.cpp" />
+    <ClCompile Include="src\snow_effect\Accumulation.cpp" />
+    <ClCompile Include="src\snow_effect\Deformation.cpp" />
+    <ClCompile Include="src\snow_effect\GroundPlane.cpp" />
+    <ClCompile Include="src\snow_effect\MeshSnow.cpp" />
+    <ClCompile Include="src\snow_effect\ModelSnow.cpp" />
+    <ClCompile Include="src\snow_effect\SnowEffectObject.cpp" />
     <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\water_effect\WaterEffectObject.cpp" />
+    <ClCompile Include="src\water_effect\wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shader\model.fs.glsl" />
@@ -112,12 +129,22 @@
     <None Include="assets\shader\shadowSpot.vs.glsl" />
     <None Include="assets\shader\skybox.fs.glsl" />
     <None Include="assets\shader\skybox.vs.glsl" />
+    <None Include="assets\shader\snow_effect\HeightFragmentShader.fragmentshader" />
+    <None Include="assets\shader\snow_effect\HeightVertexShader.vertexshader" />
+    <None Include="assets\shader\snow_effect\InstancedFragShader.fragmentshader" />
+    <None Include="assets\shader\snow_effect\InstancedVertShader.vertexshader" />
+    <None Include="assets\shader\snow_effect\SimpleFragmentShader.fragmentshader" />
+    <None Include="assets\shader\snow_effect\SimpleVertexShader.vertexshader" />
+    <None Include="assets\shader\snow_effect\TexturedFragShader.fragmentshader" />
+    <None Include="assets\shader\snow_effect\TexturedVertShader.vertexshader" />
+    <None Include="assets\shader\water_effect\surface.frag" />
+    <None Include="assets\shader\water_effect\surface.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E2D30605-456D-4281-B8EF-8E746070F688}</ProjectGuid>
     <RootNamespace>openglfinal</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -202,9 +229,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;assimp-vc140-mt.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;assimp-vc140-mt.lib;libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
