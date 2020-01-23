@@ -2,17 +2,12 @@
 
 This is our final project for opengl introduction course at school.
 
-
-
 ### Screen Shot
 
-![](/home/cccccroge/.var/app/com.github.marktext.marktext/config/marktext/images/2020-01-23-11-37-21-image.png)
-
-![](/home/cccccroge/.var/app/com.github.marktext.marktext/config/marktext/images/2020-01-23-11-37-41-image.png)
-
-![](/home/cccccroge/.var/app/com.github.marktext.marktext/config/marktext/images/2020-01-23-11-38-13-image.png)
-
-![](/home/cccccroge/.var/app/com.github.marktext.marktext/config/marktext/images/2020-01-23-11-38-45-image.png)
+![](/img/01.png)
+![](/img/02.png)
+![](/img/03.png)
+![](/img/04.png)
 
 ### Implement Items
 
@@ -27,7 +22,9 @@ This is our final project for opengl introduction course at school.
   - [x] Use basic forward rendering with Blinn-Phong shading
   
   - [x] Directional light/ Point light / Spot light and their shadow mapping
-- [ ] 
+    
+    ![](/img/05.png)
+
 - Other effects
   
   - [x] Particle system (snow)
@@ -44,9 +41,7 @@ This is our final project for opengl introduction course at school.
   
   - [x] Rich GUI to control lighting/weather/camera
     
-    ![](/home/cccccroge/.var/app/com.github.marktext.marktext/config/marktext/images/2020-01-23-12-10-33-image.png)
-
-
+    ![](/img/06.png)
 
 ### Dependencies
 
@@ -61,8 +56,6 @@ This is our final project for opengl introduction course at school.
 - stb image loader 2.23
 
 - ImGui 1.74
-
-
 
 ### Development
 
@@ -82,6 +75,3 @@ This is our final project for opengl introduction course at school.
   - lib/                   library binaries that header files will look at
   
   - bin/                 executable and intermediate object files 
-    
-
-
