@@ -72,6 +72,9 @@ void mainMenu()
 static float fov = 80.0f;
 static float gamma = 1.5f;
 static float move_progress = 0.0;
+static float kernel_radius = 0.7;
+static float bias = 0.005;
+static float occ_power = 1;
 
 void cameraTool()
 {
@@ -87,6 +90,24 @@ void cameraTool()
 			global::program_posteffect->setUniform1f("gamma", gamma);
 		}
 		ImGui::Unindent();
+	ImGui::Separator();
+
+	ImGui::BulletText("SSAO setting");
+	ImGui::Indent();
+	if (ImGui::SliderFloat("kernel radius", &kernel_radius, 0.001f, 1.0f)) {
+		global::program_ssao_map->bind();
+		global::program_ssao_map->setUniform1f("radius", kernel_radius);
+	}
+	if (ImGui::SliderFloat("bias", &bias, 0.005f, 0.5f)) {
+		global::program_ssao_map->bind();
+		global::program_ssao_map->setUniform1f("bias", bias);
+	}
+	if (ImGui::SliderFloat("occlusion power", &occ_power, 0.1f, 1.0f)) {
+		global::program_ssao_map->bind();
+		global::program_ssao_map->setUniform1f("occlusion_power", occ_power);
+	}
+
+	ImGui::Unindent();
 	ImGui::Separator();
 
 	ImGui::BulletText("Static mode");

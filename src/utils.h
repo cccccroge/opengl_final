@@ -3,6 +3,8 @@
 #include "GLEW/glew.h"
 #include "freeGLUT/freeglut.h"
 #include <string>
+#include <vector>
+#include "GLM/vec3.hpp"
 
 
 void dumpInfo(void);
@@ -16,6 +18,7 @@ char* file2Cstring(const char *path);
 bool isFileExist(const char *path);
 float randomFloat(const float min, const float max);
 double calcFPS(double timeInterval = 1.0);
+std::vector<glm::vec3> genSsaoKernel(const int points);
 
 //extern long long int currentTime;
 

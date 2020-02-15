@@ -29,6 +29,8 @@ namespace global
     extern ShaderProgram *program_skybox;
     extern ShaderProgram *program_shadow;
     extern ShaderProgram *program_shadow_point;
+    extern ShaderProgram* program_ssao;
+    extern ShaderProgram* program_ssao_map;
 
     extern PostEffectBuffer *postEffectBuffer;
     extern FrameBuffer *depthMapBuffer;
@@ -37,6 +39,12 @@ namespace global
     extern CubemapTexture *depthTexPoint;
     extern FrameBuffer* depthMapBufferSpot;
     extern Texture* depthTexSpot;
+    extern FrameBuffer* posNormBuffer;
+    extern Texture* posTex;
+    extern Texture* normTex;
+    extern Texture* noiseTex;
+    extern FrameBuffer* ssaoBuffer;
+    extern Texture* ssaoTex;
 
     extern Model *Man;
     extern Skybox *skybox;

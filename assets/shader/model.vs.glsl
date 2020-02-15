@@ -55,7 +55,6 @@ void main()
 	vec3 B = cross(N, T);
 	vertexData.TBN = mat3(T, B, N);
 
-
     blinnPhongData.fragPos = vec3(mMatrix * vec4(position, 1.0));
     blinnPhongData.normal = mat3(transpose(inverse(mMatrix))) * normal;
 
@@ -64,7 +63,6 @@ void main()
     shadowData.fragPosWorld = blinnPhongData.fragPos;
 
 	fogData.viewSpace = mvMatrix * vec4(position, 1.0);
-
 
     // calculate vertex position
 	gl_Position = mvpMatrix * vec4(position, 1.0);

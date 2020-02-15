@@ -99,7 +99,19 @@ void ShaderProgram::setUniform1d(const char* name, GLdouble val)
     glUniform1d(getUniform(name), val);
 }
 
+void ShaderProgram::setUniformVec2(const char* name, glm::vec2 vec)
+{
+    glUniform2fv(getUniform(name), 1, glm::value_ptr(vec));
+}
+
+
 void ShaderProgram::setUniformVec3(const char *name, glm::vec3 vec)
 {
     glUniform3fv(getUniform(name), 1, glm::value_ptr(vec));
+}
+
+void ShaderProgram::setUniformVec3v(const char* name, const int num,
+    std::vector<glm::vec3>& vectors)
+{
+    glUniform3fv(getUniform(name), num, glm::value_ptr(vectors[0]));
 }

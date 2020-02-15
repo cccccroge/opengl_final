@@ -3,7 +3,6 @@
 #include <string>
 #include "GLEW/glew.h"
 #include "../render/ShaderProgram.h"
-#include <string>
 
 
 enum class TEXTURE_TYPE

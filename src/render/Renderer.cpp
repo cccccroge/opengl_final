@@ -92,6 +92,26 @@ void Renderer::RenderAll()
 
 		DrawDepthMapSpot();
 		
+	// 1-2.draw position & normal map for ssao
+	global::posNormBuffer->bind();
+	glViewport(0, 0, global::renderWidth, global::renderHeight);
+
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		DrawPosNorm();
+
+	// 1-3. draw ssao map
+	global::ssaoBuffer->bind();
+	glViewport(0, 0, global::renderWidth, global::renderHeight);
+
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDisable(GL_DEPTH_TEST);
+
+		DrawSsaoMap();
+
+		glEnable(GL_DEPTH_TEST);
 
     // 2.draw all models -> snow -> skybox
     global::postEffectBuffer->bindFrameBuffer();
@@ -202,6 +222,29 @@ void Renderer::DrawDepthMapSpot()
 	}
 }
 
+void Renderer::DrawPosNorm()
+{
+	global::program_ssao->bind();
+
+	glm::mat4 view = main_camera->getViewMat();
+	glm::mat4 proj = main_camera->getProjMat();
+	global::program_ssao->setUniformMat4("vMatrix", view);
+	global::program_ssao->setUniformMat4("pMatrix", proj);
+
+	for (auto modelPtr : model_vec) {
+		// change uniforms in program
+		glm::mat4 model = modelPtr->getModelMat();
+		global::program_ssao->setUniformMat4("mMatrix", model);
+
+		// bind mesh and draw
+		for (auto meshPtr : modelPtr->getMeshes()) {
+			meshPtr->bind();
+			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
+				GL_UNSIGNED_INT, 0);
+		}
+	}
+}
+
 void Renderer::DrawModels()
 {
 	global::program_model->bind();
@@ -241,11 +284,12 @@ void Renderer::DrawModels()
 		// bind mesh and draw
 		for (auto meshPtr : modelPtr->getMeshes()) {
 			global::depthTex->bind(*global::program_model,    // use in shadow mapping
-				"shadowMap", 3);
+				"shadowMap", 3);		// 0, 1, 2 occupied at line 292
 			global::depthTexPoint->bind(*global::program_model,
 				"shadowMapPoint", 4);
 			global::depthTexSpot->bind(*global::program_model,
 				"shadowMapSpot", 5);
+			global::ssaoTex->bind(*global::program_model, "ssaoMap", 6);
 
 			meshPtr->bind(*global::program_model);
 			glDrawElements(GL_TRIANGLES, meshPtr->getIndicesNum(),
@@ -270,9 +314,30 @@ void Renderer::DrawScreen()
 {
 	global::program_posteffect->bind();
 
-	global::depthTex->bind(*global::program_posteffect, "screenTex", 0);
+	// testing other buffer texture
 	//global::postEffectBuffer->bindMeshOnly();
+	//global::depthTex->bind(*global::program_posteffect, "screenTex", 0);
+	//global::posTex->bind(*global::program_posteffect, "screenTex", 0);
+	//global::normTex->bind(*global::program_posteffect, "screenTex", 0);
+	//global::noiseTex->bind(*global::program_posteffect, "screenTex", 0);
+	//global::ssaoTex->bind(*global::program_posteffect, "screenTex", 0);
+
 	global::postEffectBuffer->bindScreen();
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void Renderer::DrawSsaoMap()
+{
+	// setup uniform
+	global::program_ssao_map->bind();
+	global::posTex->bind(*global::program_ssao_map, "gPosition", 0);
+	global::normTex->bind(*global::program_ssao_map, "gNormal", 1);
+	global::noiseTex->bind(*global::program_ssao_map, "kernelNoise", 2);
+	glm::mat4 proj = main_camera->getProjMat();
+	global::program_ssao_map->setUniformMat4("pMatrix", proj);
+
+	// bind vao & draw
+	global::postEffectBuffer->bindMeshOnly();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 

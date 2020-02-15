@@ -137,6 +137,10 @@
     <None Include="assets\shader\snow_effect\SimpleVertexShader.vertexshader" />
     <None Include="assets\shader\snow_effect\TexturedFragShader.fragmentshader" />
     <None Include="assets\shader\snow_effect\TexturedVertShader.vertexshader" />
+    <None Include="assets\shader\ssao.fs.glsl" />
+    <None Include="assets\shader\ssao.vs.glsl" />
+    <None Include="assets\shader\ssao_map.fs.glsl" />
+    <None Include="assets\shader\ssao_map.vs.glsl" />
     <None Include="assets\shader\water_effect\surface.frag" />
     <None Include="assets\shader\water_effect\surface.vert" />
   </ItemGroup>
@@ -144,7 +148,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E2D30605-456D-4281-B8EF-8E746070F688}</ProjectGuid>
     <RootNamespace>openglfinal</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

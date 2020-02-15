@@ -50,14 +50,44 @@ void FrameBuffer::attachEmptyColorBuffer()
     unbind();
 }
 
+void FrameBuffer::attachDepthBuffer(const int width, const int height)
+{
+    bind();
+
+    GLuint rbo;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    unbind();
+}
+
 bool FrameBuffer::validate()
 {
+    bool success = false;
+
+    bind();
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "invalid frame buffer" << std::endl;
-        return false;
     }
+    else {
+        success = true;
+    }
+    unbind();
 
-    return true;
+    return success;
+}
+
+void FrameBuffer::colAttachNumber(const int size)
+{
+    bind();
+    // only consider when size == 2
+    if (size == 2) {
+        unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+        glDrawBuffers(2, attachments);
+    }
+    unbind();
 }
 
 

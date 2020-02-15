@@ -17,7 +17,10 @@ public:
     void attachCubemapTexture(CubemapTexture& tex, const GLenum attach_type);
     void attachRenderBuffer(RenderBuffer &render_buffer);
     void attachEmptyColorBuffer();
+    void attachDepthBuffer(const int width, const int height);
     bool validate();
+
+    void colAttachNumber(const int size);
 
     void bind();
     void unbind();

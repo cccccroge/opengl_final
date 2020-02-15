@@ -188,7 +188,37 @@ double calcFPS(double timeInterval)
 	return fps;
 }
 
+std::vector<glm::vec3> genSsaoKernel(const int points)
+{
+	std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between 0~1
+	std::default_random_engine generator;
 
+	std::vector<glm::vec3> kernel;
+	for (unsigned int i = 0; i < points; ++i)
+	{
+		// half cube
+		glm::vec3 sample(
+			randomFloats(generator) * 2.0 - 1.0,	// -1~1
+			randomFloats(generator) * 2.0 - 1.0,	// -1~1
+			randomFloats(generator)					//  0~1
+		);
+
+		// half sphere surface
+		sample = glm::normalize(sample);
+
+		// half sphere
+		sample *= randomFloats(generator);
+
+		// make dense when the point is closer to center
+		float scale = (float)i / points;
+		scale = 0.1f + 0.9f * (scale * scale);
+		sample *= scale;
+
+		kernel.push_back(sample);
+	}
+
+	return kernel;
+}
 
 GlutTimer::GlutTimer()
 {

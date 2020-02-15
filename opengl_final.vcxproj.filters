@@ -391,5 +391,17 @@
     <None Include="assets\shader\water_effect\surface.vert">
       <Filter>assets\shader\water_effect</Filter>
     </None>
+    <None Include="assets\shader\ssao.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\ssao.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\ssao_map.vs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
+    <None Include="assets\shader\ssao_map.fs.glsl">
+      <Filter>assets\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

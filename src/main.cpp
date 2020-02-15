@@ -29,6 +29,8 @@ ShaderProgram* global::program_posteffect;
 ShaderProgram* global::program_skybox;
 ShaderProgram* global::program_shadow;
 ShaderProgram* global::program_shadow_point;
+ShaderProgram* global::program_ssao;
+ShaderProgram* global::program_ssao_map;
 
 PostEffectBuffer* global::postEffectBuffer;
 FrameBuffer* global::depthMapBuffer;
@@ -37,6 +39,12 @@ FrameBuffer* global::depthMapBufferPoint;
 CubemapTexture* global::depthTexPoint;
 FrameBuffer* global::depthMapBufferSpot;
 Texture* global::depthTexSpot;
+FrameBuffer* global::posNormBuffer;
+Texture* global::posTex;
+Texture* global::normTex;
+Texture* global::noiseTex;
+FrameBuffer* global::ssaoBuffer;
+Texture* global::ssaoTex;
 
 Renderer* global::renderer;
 Model* global::Man;
@@ -91,6 +99,20 @@ void setupRendering()
 	global::program_shadow_point->addShader(geometry_shadow_point);
 	global::program_shadow_point->addShader(fragmentShader_shadow_point);
 	global::program_shadow_point->compile();
+
+	Shader vertexShader_ssao = Shader(GL_VERTEX_SHADER, "assets/shader/ssao.vs.glsl");
+	Shader fragmentShader_ssao = Shader(GL_FRAGMENT_SHADER, "assets/shader/ssao.fs.glsl");
+	global::program_ssao = new ShaderProgram();
+	global::program_ssao->addShader(vertexShader_ssao);
+	global::program_ssao->addShader(fragmentShader_ssao);
+	global::program_ssao->compile();
+
+	Shader vertexShader_ssao_map = Shader(GL_VERTEX_SHADER, "assets/shader/ssao_map.vs.glsl");
+	Shader fragmentShader_ssao_map = Shader(GL_FRAGMENT_SHADER, "assets/shader/ssao_map.fs.glsl");
+	global::program_ssao_map = new ShaderProgram();
+	global::program_ssao_map->addShader(vertexShader_ssao_map);
+	global::program_ssao_map->addShader(fragmentShader_ssao_map);
+	global::program_ssao_map->compile();
    
 	// setup models
 	global::Man = new Model("assets/model/main_scene/SFMC_main.obj");
@@ -177,7 +199,7 @@ void setupRendering()
 	global::program_posteffect->bind();
 	global::program_posteffect->setUniform1i("screenTex", 0);
 
-	// set up depth map buffer
+	// set up frame buffers
 	global::depthMapBuffer = new FrameBuffer();
 	global::depthTex = new Texture(0, DEPTH_MAP_RESOLUTION, DEPTH_MAP_RESOLUTION);
 	global::depthMapBuffer->attachTexture(*global::depthTex, GL_DEPTH_ATTACHMENT);
@@ -197,6 +219,21 @@ void setupRendering()
 	global::depthMapBufferSpot->attachEmptyColorBuffer();
 	global::depthMapBufferSpot->validate();
 
+	global::posNormBuffer = new FrameBuffer();
+	global::posTex = new Texture(1, MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+	global::normTex = new Texture(1, MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+	global::posNormBuffer->attachTexture(*global::posTex, GL_COLOR_ATTACHMENT0);
+	global::posNormBuffer->attachTexture(*global::normTex, GL_COLOR_ATTACHMENT1);
+	global::posNormBuffer->colAttachNumber(2);
+	global::posNormBuffer->attachDepthBuffer(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+	global::posNormBuffer->validate();
+	global::noiseTex = new Texture(2, 4, 4);
+
+	global::ssaoBuffer = new FrameBuffer();
+	global::ssaoTex = new Texture(1, MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+	global::ssaoBuffer->attachTexture(*global::ssaoTex, GL_COLOR_ATTACHMENT0);
+	global::ssaoBuffer->validate();
+
 	// set up uniforms for programs
 	global::program_posteffect->bind();
 	global::program_posteffect->setUniform1f("gamma", 1.3f);
@@ -207,6 +244,16 @@ void setupRendering()
 	global::program_model->setUniform1f("fogDensity", 0.03);
 	global::program_model->setUniformVec3("fogColor", 
 		vec3(209 / 255.0, 209 / 255.0, 209 / 255.0));
+
+	global::program_ssao_map->bind();
+	auto kernel = genSsaoKernel(16);
+	global::program_ssao_map->setUniformVec3v("kernel", 16, kernel);
+	glm::vec2 noiseScale = glm::vec2(global::renderWidth / 4, 
+		global::renderWidth / 4);
+	global::program_ssao_map->setUniformVec2("noiseScale", noiseScale);
+	global::program_ssao_map->setUniform1f("radius", 0.7);
+	global::program_ssao_map->setUniform1f("bias", 0.005);
+	global::program_ssao_map->setUniform1f("occlusion_power", 1.0);
 
 	// set up navigation travel tool timer
 	global::travelTimer = new Timer(TIMER_TYPE::REPEAT, 1, nextCurvePts, 0);

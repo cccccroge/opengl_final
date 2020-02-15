@@ -26,9 +26,11 @@ public:
 	void DrawDepthMap();
     void DrawDepthMapPoint();
     void DrawDepthMapSpot();
+    void DrawPosNorm();
 	void DrawModels();
 	void DrawSkybox();
 	void DrawScreen();
+    void DrawSsaoMap();
 	void DrawImGui();
 
     inline Camera* getMainCamera() { return main_camera; }

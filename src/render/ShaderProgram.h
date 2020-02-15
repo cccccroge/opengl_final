@@ -3,6 +3,7 @@
 #include "GLEW/glew.h"
 #include "Shader.h"
 #include "GLM/mat4x4.hpp"
+#include <vector>
 
 
 class ShaderProgram
@@ -19,7 +20,10 @@ public:
     void setUniform1i(const char *name, GLint val);
     void setUniform1f(const char *name, GLfloat val);
     void setUniform1d(const char* name, GLdouble val);
+    void setUniformVec2(const char *name, glm::vec2 vec);
     void setUniformVec3(const char *name, glm::vec3 vec);
+    void setUniformVec3v(const char *name, const int num, 
+        std::vector<glm::vec3> &vectors);
 
 private:
     GLint getUniform(const char *name);

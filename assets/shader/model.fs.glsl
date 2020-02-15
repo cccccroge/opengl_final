@@ -98,16 +98,21 @@ uniform struct Material {
 } material;
 
 
-uniform float ambientStrength = 0.08;
+uniform float ambientStrength = 0.5;
 uniform vec3 default_diffuseAlbedo = vec3(0.2, 0.2, 0.2);
 uniform vec3 default_specularAlbedo = vec3(0.5, 0.5, 0.5);
 uniform int specularPower = 200;
 
-// others
-uniform samplerCube skybox;
+// Shadow
 uniform sampler2D shadowMap;
 uniform samplerCube shadowMapPoint;
 uniform sampler2D shadowMapSpot;
+
+// ssao
+uniform sampler2D ssaoMap;
+uniform mat4 mvpMatrix;
+
+// Fog
 uniform float fogDensity;
 uniform vec3 fogColor;
 
@@ -261,6 +266,7 @@ float shadow_factor_spot(vec4 fragPos, vec3 light_dir_unit)   // light space
 	return shadow_factor;
 }
 
+
 /*-------------------------------------*/
 /*	   Helper Blinn-Phong functions	   */
 /*-------------------------------------*/
@@ -388,8 +394,12 @@ vec3 blinn_phong()
 {
 	vec3 accum = vec3(0.0, 0.0, 0.0);
 
-	// default ambient
-	vec3 ambient = ambientStrength * ambientAlbedo();
+	// ambient
+	vec4 ssaoMap_coord = (mvpMatrix * vec4(vertexData.position, 1.0));
+	ssaoMap_coord.xyz /= ssaoMap_coord.w;
+	ssaoMap_coord.xyz = ssaoMap_coord.xyz * 0.5 + 0.5;
+	float ao_factor = texture(ssaoMap, ssaoMap_coord.xy).r;
+	vec3 ambient = ambientStrength * ambientAlbedo() * ao_factor;
 	accum += ambient;
 
 	// directional lights
