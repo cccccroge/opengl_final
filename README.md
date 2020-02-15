@@ -2,6 +2,9 @@
 
 This is our final project for opengl introduction course at school.
 
+### Update
+- Add SSAO 
+
 ### Screen Shot
 
 ![](/img/01.png)
